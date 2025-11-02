@@ -6,4 +6,5 @@
 |6.5.2025|2|planned project subject, created initial folder structure, added .gitignore and made worklog.md|
 |31.5.2025|2|initialized backend project and basic configuration|
 |31.5.2025|1|configured eslint for backend and installed VSCode plugin for it|
-|**Total**|**6**||
+|1.6.2025|1|initialized frontend React project with Vite|
+|**Total**|**7**||
