@@ -9,4 +9,5 @@
 |1.6.2025|1|initialized frontend React project with Vite|
 |7.6.2025|1|set up root package.json for monorepo scripts|
 |8.6.2025|2|set up basic Express server and database connection module|
-|**Total**|**10**||
+|14.6.2025|6|implemented backend for managing projects and skills|
+|**Total**|**16**||
