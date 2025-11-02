@@ -7,4 +7,5 @@
 |31.5.2025|2|initialized backend project and basic configuration|
 |31.5.2025|1|configured eslint for backend and installed VSCode plugin for it|
 |1.6.2025|1|initialized frontend React project with Vite|
-|**Total**|**7**||
+|7.6.2025|1|set up root package.json for monorepo scripts|
+|**Total**|**8**||
