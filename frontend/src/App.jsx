@@ -1,4 +1,4 @@
-
+'./App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import HomePage  from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
@@ -8,11 +8,11 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div>
+      <div className="nav-bar">
         <div>
-          <Link to="/">Home</Link>
-          <Link to="/projects">Projects</Link>
-          <Link to="/skills">Skills</Link>
+          <Link className="button" to="/">Home</Link>
+          <Link className="button" to="/projects">Projects</Link>
+          <Link className="button" to="/skills">Skills</Link>
         </div>
       </div>
       <Routes>

@@ -13,7 +13,7 @@ const SkillsPage = () => {
   }, [])
 
   return (
-    <div>
+    <div className="content-window">
       <h1>This is the skills page!</h1>
       <h4>Here is the list of skills:</h4>
       <ul>

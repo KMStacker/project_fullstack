@@ -13,7 +13,7 @@ const ProjectsPage = () => {
   }, [])
 
   return (
-    <div>
+    <div className="content-window">
       <h1>This is the projects page!</h1>
       <h4>Here is the list of projects:</h4>
       <ul>
