@@ -11,4 +11,5 @@
 |8.6.2025|2|set up basic Express server and database connection module|
 |14.6.2025|6|implemented backend for managing projects and skills|
 |28.6.2025|4|set up frontend routing with React Router and created pages|
+|29.6.2025|4|implemented data fetching and display for projects and skills pages|
 |**Total**|**20**||
