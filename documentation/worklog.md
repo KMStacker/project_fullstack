@@ -10,4 +10,5 @@
 |7.6.2025|1|set up root package.json for monorepo scripts|
 |8.6.2025|2|set up basic Express server and database connection module|
 |14.6.2025|6|implemented backend for managing projects and skills|
-|**Total**|**16**||
+|28.6.2025|4|set up frontend routing with React Router and created pages|
+|**Total**|**20**||
