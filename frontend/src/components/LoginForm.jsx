@@ -1,13 +1,25 @@
 import { useState } from 'react'
 
-const LoginForm = () => {
+const LoginForm = ({ user, handleLogin, handleLogout }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const submitLogin = (event) => {
+  const submitLogin = async (event) => {
     event.preventDefault()
+    handleLogin(username, password)
     setUsername('')
     setPassword('')
+  }
+
+  if (user) {
+    return (
+      <div className="login-form">
+        <p>
+          Welcome, {user.username}! &nbsp;
+          <button onClick={handleLogout}>Logout</button>
+        </p>
+      </div>
+    )
   }
 
   return (
