@@ -16,4 +16,5 @@
 |6.7.2025|1|added backend middleware for unknown endpoints|
 |26.7.2025|1|added simple versions of frontend AdminPage and LoginForm components|
 |2.8.2025|10|implemented backend user model, admin creation script, authorization, token extractor and expanded error handling|
-|**Total**|**39**||
+|3.8.2025|5|implemented backend user creation and login endpoints|
+|**Total**|**44**||

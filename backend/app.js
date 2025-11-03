@@ -5,6 +5,8 @@ const skillsRouter = require('./controllers/skills')
 const tokenExtractor = require('./middleware/tokenExtractor')
 const unknownEndpoint = require('./middleware/unknownEndpoint')
 const errorHandler = require('./middleware/errorHandler')
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 const app = express()
 
@@ -16,6 +18,8 @@ app.use(tokenExtractor)
 
 app.use('/api/projects', projectsRouter)
 app.use('/api/skills', skillsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
