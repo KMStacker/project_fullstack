@@ -19,4 +19,5 @@
 |3.8.2025|5|implemented backend user creation and login endpoints|
 |17.8.2025|4|implemented frontend login service for backend communication|
 |30.8.2025|1|added request logger middleware|
-|**Total**|**49**||
+|31.8.2025|11|implemented full functionality for frontend AdminPage|
+|**Total**|**60**||
