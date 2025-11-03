@@ -14,5 +14,6 @@
 |29.6.2025|4|implemented data fetching and display for projects and skills pages|
 |5.7.2025|3|added global CSS styles and background image to frontend|
 |6.7.2025|1|added backend middleware for unknown endpoints|
-|26.7.2025|1|added simple versions of frontend AdminPage and LoginForm component|
-|**Total**|**28**||
+|26.7.2025|1|added simple versions of frontend AdminPage and LoginForm components|
+|2.8.2025|10|implemented backend user model, admin creation script, authorization, token extractor and expanded error handling|
+|**Total**|**39**||
