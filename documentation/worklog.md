@@ -18,4 +18,5 @@
 |2.8.2025|10|implemented backend user model, admin creation script, authorization, token extractor and expanded error handling|
 |3.8.2025|5|implemented backend user creation and login endpoints|
 |17.8.2025|4|implemented frontend login service for backend communication|
-|**Total**|**48**||
+|30.8.2025|1|added request logger middleware|
+|**Total**|**49**||
