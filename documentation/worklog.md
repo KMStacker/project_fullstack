@@ -13,4 +13,5 @@
 |28.6.2025|4|set up frontend routing with React Router and created pages|
 |29.6.2025|4|implemented data fetching and display for projects and skills pages|
 |5.7.2025|3|added global CSS styles and background image to frontend|
-|**Total**|**27**||
+|6.7.2025|1|added backend middleware for unknown endpoints|
+|**Total**|**28**||
