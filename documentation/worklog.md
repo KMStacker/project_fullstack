@@ -20,4 +20,9 @@
 |17.8.2025|4|implemented frontend login service for backend communication|
 |30.8.2025|1|added request logger middleware|
 |31.8.2025|11|implemented full functionality for frontend AdminPage|
-|**Total**|**60**||
+|13.6.2026|1|converted backend environment and configuration to TypeScript|
+| |1|converted utility modules to TypeScript|
+| |2|converted database models to TypeScript and fixed JSON transformations|
+| |2|converted Express middlewares to TypeScript and created CustomRequest interface|
+| |4|converted all controllers and the admin creation script to TypeScript, and verified full functionality|
+|**Total**|**70**||

@@ -1,20 +1,24 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-const User = require('./models/user')
-const logger = require('./utils/logger')
+import dotenv from 'dotenv'
+dotenv.config()
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import User from './models/user'
+import * as logger from './utils/logger'
 
 
-const createAdminAccount = async () => {
+const createAdminAccount = async (): Promise<void> => {
   try {
     // connecting to DB
     logger.info('Connecting to db...')
+    if (!process.env.MONGODB_URI) {
+      logger.error('MONGODB_URI is not defined in .env')
+      return
+    }
     await mongoose.connect(process.env.MONGODB_URI)
     logger.info('Connected to db!')
 
     // creating admin account
     const password = process.env.ADMIN_PSW
-
     if (!password) {
       logger.error('ADMIN_PSW is not defined in .env')
       return
@@ -45,11 +49,11 @@ const createAdminAccount = async () => {
 
     logger.info(' All done and dusted for the sake of the admin account!')
 
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error creating admin account:', error.message)
   } finally {
     logger.info('Closing db connection...')
-    mongoose.connection.close()
+    await mongoose.connection.close()
     logger.info('Db connection closed!')
   }
 }

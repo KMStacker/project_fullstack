@@ -1,6 +1,7 @@
-const logger = require('../utils/logger')
+import {NextFunction, Request, Response} from 'express'
+import * as logger from '../utils/logger'
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error: Error, _request: Request, response: Response, next: NextFunction): Response | void => {
   logger.error(error.message)
 
   if (error.name === 'CastError') {
@@ -20,4 +21,4 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-module.exports = errorHandler
+export default errorHandler

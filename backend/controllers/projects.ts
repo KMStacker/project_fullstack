@@ -1,15 +1,17 @@
-const projectsRouter = require('express').Router()
-const Project = require('../models/project')
+import express from 'express'
+import Project from '../models/project'
+
+const projectsRouter = express.Router()
 
 // get all projects
-projectsRouter.get('/', async (request, response) => {
+projectsRouter.get('/', async (_request: express.Request, response: express.Response) => {
   const projects = await Project
     .find({})
   response.json(projects)
 })
 
 // create new project
-projectsRouter.post('/', async (request, response) => {
+projectsRouter.post('/', async (request: express.Request, response: express.Response) => {
   const body = request.body
 
   const project = new Project({
@@ -24,7 +26,7 @@ projectsRouter.post('/', async (request, response) => {
 })
 
 // update project
-projectsRouter.put('/:id', async (request, response) => {
+projectsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
   const body = request.body
 
   const project = {
@@ -41,10 +43,10 @@ projectsRouter.put('/:id', async (request, response) => {
 
 
 // delete project
-projectsRouter.delete('/:id', async (request, response) => {
+projectsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
   await Project
     .findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
 
-module.exports = projectsRouter
+export default projectsRouter

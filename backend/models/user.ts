@@ -1,6 +1,12 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+export interface IUser {
+  username: string
+  passwordHash: string
+  role: 'USER' | 'ADMIN'
+}
+
+const userSchema = new mongoose.Schema<IUser>({
   username: {
     type: String,
     required: true,
@@ -20,7 +26,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
+  transform: (_document, returnedObject: any) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
@@ -28,6 +34,6 @@ userSchema.set('toJSON', {
   }
 })
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model<IUser>('User', userSchema)
 
-module.exports = User
+export default User

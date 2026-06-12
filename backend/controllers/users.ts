@@ -1,8 +1,10 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
+import express from 'express'
+import bcrypt from 'bcrypt'
+import User from '../models/user'
 
-usersRouter.post('/', async (request, response) => {
+const usersRouter = express.Router()
+
+usersRouter.post('/', async (request: express.Request, response: express.Response) => {
   const { username, password } = request.body
 
   const saltRounds = 10
@@ -18,4 +20,4 @@ usersRouter.post('/', async (request, response) => {
   response.status(201).json(savedUser)
 })
 
-module.exports = usersRouter
+export default usersRouter

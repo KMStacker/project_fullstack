@@ -1,16 +1,18 @@
-const skillsRouter = require('express').Router()
-const Skill = require('../models/skill')
+import express from 'express'
+import Skill from '../models/skill'
 
+
+const skillsRouter = express.Router()
 
 // get all skills
-skillsRouter.get('/', async (request, response) => {
+skillsRouter.get('/', async (_request: express.Request, response: express.Response) => {
   const skills = await Skill
     .find({})
   response.json(skills)
 })
 
 // create new skill
-skillsRouter.post('/', async (request, response) => {
+skillsRouter.post('/', async (request: express.Request, response: express.Response) => {
   const body = request.body
 
   const skill = new Skill({
@@ -24,7 +26,7 @@ skillsRouter.post('/', async (request, response) => {
 })
 
 // update skill
-skillsRouter.put('/:id', async (request, response) => {
+skillsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
   const body = request.body
 
   const skill = {
@@ -39,10 +41,10 @@ skillsRouter.put('/:id', async (request, response) => {
 })
 
 // delete skill
-skillsRouter.delete('/:id', async (request, response) => {
+skillsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
   await Skill
     .findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
 
-module.exports = skillsRouter
+export default skillsRouter

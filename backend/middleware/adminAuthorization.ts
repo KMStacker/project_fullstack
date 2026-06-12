@@ -1,6 +1,10 @@
-const jwt = require('jsonwebtoken')
+import { Response, NextFunction } from 'express'
+import jwt from 'jsonwebtoken'
+import { CustomRequest } from './tokenExtractor'
+import * as config from '../utils/config'
 
-const adminAuthorization = (request, response, next) => {
+
+export const adminAuthorization = (request: CustomRequest, _response: Response, next: NextFunction) => {
   try {
     const token = request.token
     if (!token) {
@@ -10,7 +14,7 @@ const adminAuthorization = (request, response, next) => {
       })
     }
 
-    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const decodedToken = jwt.verify(token, config.SECRET || '') as jwt.JwtPayload
     if (!decodedToken.id || decodedToken.role !== 'ADMIN') {
       return next({
         name: 'AuthorizationError',
@@ -24,5 +28,3 @@ const adminAuthorization = (request, response, next) => {
     next(error)
   }
 }
-
-module.exports = { adminAuthorization }
