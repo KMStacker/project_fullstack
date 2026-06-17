@@ -1,32 +1,48 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
+export interface Project {
+  _id: string
+  title: string
+  description: string
+  technologies: string
+  githubUrl: string
+}
 
-const AdminPage = () => {
-  const [projects, setProjects] = useState([])
+export interface Skill {
+  _id:string
+  name: string
+  level: string
+  usedOn: string
+  description?: string
+  technologies?: string
+}
+
+const AdminPage = (): JSX.Element => {
+  const [projects, setProjects] = useState<Project[]>([])
   const [newProject, setNewProject] = useState({
     title: '',
     description: '',
     technologies: '',
     githubUrl: ''
   })
-  const [editingProject, setEditingProject] = useState(null)
-  const [visibleProjects, setVisibleProjects] = useState([])
-  const [addingProject, setAddingProject] = useState(false)
+  const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [visibleProjects, setVisibleProjects] = useState<string[]>([])
+  const [addingProject, setAddingProject] = useState<boolean>(false)
 
-  const [skills, setSkills] = useState([])
+  const [skills, setSkills] = useState<Skill[]>([])
   const [newSkill, setNewSkill] = useState({
     name: '',
     level: '',
     usedOn: ''
   })
-  const [editingSkill, setEditingSkill] = useState(null)
-  const [visibleSkills, setVisibleSkills] = useState([])
-  const [addingSkill, setAddingSkill] = useState(false) 
- 
+  const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
+  const [visibleSkills, setVisibleSkills] = useState<string[]>([])
+  const [addingSkill, setAddingSkill] = useState<boolean>(false)
+
   useEffect(() => {
     axios
-      .get('/api/projects')
+      .get<Project[]>('/api/projects')
       .then(response => {
         setProjects(response.data)
       })
@@ -34,13 +50,13 @@ const AdminPage = () => {
 
   useEffect(() => {
     axios
-      .get('/api/skills')
+      .get<Skill[]>('/api/skills')
       .then(response => {
         setSkills(response.data)
       })
   }, [])
 
-  const toggleInfo = (id, visibleItems, setVisibleItems) => {
+  const toggleInfo = (id: string, visibleItems: string[], setVisibleItems: React.Dispatch<React.SetStateAction<string[]>>): void => {
     if (visibleItems.includes(id)) {
       setVisibleItems(visibleItems.filter(itemId => itemId !== id))
     } else {
@@ -48,7 +64,7 @@ const AdminPage = () => {
     }
   }
 
-  const handleInputChange = (event, setState, state) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<any>>, state: any): void => {
     const { name, value } = event.target
    setState({
       ...state,
@@ -57,7 +73,7 @@ const AdminPage = () => {
   }
 
   
-  const handleAddProject = async (event) => {
+  const handleAddProject = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
     try {
       const response = await axios.post('/api/projects', newProject)
@@ -74,7 +90,7 @@ const AdminPage = () => {
     }
   }
 
-  const handleDeleteProject = async (id) => {
+  const handleDeleteProject = async (id: string): Promise<void> => {
     try {
       await axios.delete(`/api/projects/${id}`)
       setProjects(projects.filter(project => project._id !== id))
@@ -83,8 +99,9 @@ const AdminPage = () => {
     }
   }
 
-  const handleEditProject = async (event) => {
+  const handleEditProject = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
+    if (!editingProject) return
     try {
       const response = await axios.put(`/api/projects/${editingProject._id}`, editingProject)
       setProjects(projects.map(project => project._id === editingProject._id ? response.data : project))
@@ -94,7 +111,7 @@ const AdminPage = () => {
     }
   }
 
-  const handleAddSkill = async (event) => {
+  const handleAddSkill = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
     try {
       const response = await axios.post('/api/skills', newSkill)
@@ -110,7 +127,7 @@ const AdminPage = () => {
     }
   }
 
-  const handleDeleteSkill = async (id) => {
+  const handleDeleteSkill = async (id: string): Promise<void> => {
     try {
       await axios.delete(`/api/skills/${id}`)
       setSkills(skills.filter(skill => skill._id !== id))
@@ -119,8 +136,9 @@ const AdminPage = () => {
     }
   }
 
-  const handleEditSkill = async (event) => {
+  const handleEditSkill = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
+    if (!editingSkill) return
     try {
       const response = await axios.put(`/api/skills/${editingSkill._id}`, editingSkill)
       setSkills(skills.map(skill => skill._id === editingSkill._id ? response.data : skill))

@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
-const ProjectsPage = () => {
-  const [projects, setProjects] = useState([])
+export interface Project {
+  _id: string
+  title: string
+  description: string
+  technologies: string
+  githubUrl: string
+}
+
+const ProjectsPage = (): JSX.Element => {
+  const [projects, setProjects] = useState<Project[]>([])
 
   useEffect(() => {
     axios

@@ -1,8 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
-const SkillsPage = () => {
-  const [skills, setSkills] = useState([])
+export interface Skill {
+  _id:string
+  name: string
+  level: string
+  usedOn: string
+}
+
+const SkillsPage = (): JSX.Element => {
+  const [skills, setSkills] = useState<Skill[]>([])
 
   useEffect(() => {
     axios

@@ -25,4 +25,8 @@
 | |2|converted database models to TypeScript and fixed JSON transformations|
 | |2|converted Express middlewares to TypeScript and created CustomRequest interface|
 | |4|converted all controllers and the admin creation script to TypeScript, and verified full functionality|
-|**Total**|**70**||
+|17.6.2026|1|converted frontend environment, configuration, services, and the main file to TypeScript|
+| |2|converted components and main pages to TypeScript and made some minor fixes|
+| |3|converted AdminPage and App components to TypeScript and solved some basic type issues|
+| |1|fixed TypeScript compilation errors and did some quick testing|
+|**Total**|**77**||

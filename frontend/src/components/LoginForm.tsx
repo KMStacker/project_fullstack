@@ -1,10 +1,22 @@
-import { useState } from 'react'
+import React, { useState, JSX } from 'react'
 
-const LoginForm = ({ user, handleLogin, handleLogout }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+interface User {
+  username: string
+  token: string
+  role: 'USER' | 'ADMIN'
+}
 
-  const submitLogin = async (event) => {
+interface LoginFormProps {
+  user: User | null
+  handleLogin: (usernae: string, password: string) => Promise<void> | void
+  handleLogout: () => void
+}
+
+const LoginForm = ({ user, handleLogin, handleLogout }: LoginFormProps): JSX.Element => {
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+
+  const submitLogin = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     handleLogin(username, password)
     setUsername('')

@@ -1,5 +1,5 @@
-'./App.css'
-import { useState, useEffect } from 'react'
+import './App.css'
+import { useState, useEffect, JSX } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import HomePage  from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
@@ -8,30 +8,36 @@ import AdminPage from './pages/AdminPage'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 
-const App = () => {
-  const [user, setUser] = useState(null)
+interface User {
+  username: string
+  token: string
+  role: 'USER' | 'ADMIN'
+}
+
+const App = (): JSX.Element => {
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      loginService.setToken(user.token)
+      const userObj = JSON.parse(loggedUserJSON) as User
+      setUser(userObj)
+      loginService.setToken(userObj.token)
     }
   }, [])
 
-  const handleLogin = async (username, password) => {
+  const handleLogin = async (username: string, password: string): Promise<void> => {
     try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-      setUser(user)
-      loginService.setToken(user.token)
-    } catch (expection) {
-      console.log(expection)
+      const loggedUser = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedInUser', JSON.stringify(loggedUser))
+      setUser(loggedUser)
+      loginService.setToken(loggedUser.token)
+    } catch (exception) {
+      console.log(exception)
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
   }
