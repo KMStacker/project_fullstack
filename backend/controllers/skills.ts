@@ -6,45 +6,47 @@ const skillsRouter = express.Router()
 
 // get all skills
 skillsRouter.get('/', async (_request: express.Request, response: express.Response) => {
-  const skills = await Skill
-    .find({})
+  const skills = await Skill.findAll()
   response.json(skills)
 })
 
 // create new skill
 skillsRouter.post('/', async (request: express.Request, response: express.Response) => {
   const body = request.body
-
-  const skill = new Skill({
+  const savedSkill = await Skill.create({
     name: body.name,
     level: body.level,
-    usedOn: body.usedOn,
+    usedOn: body.usedOn || '',
   })
-
-  const savedSkill = await skill.save()
   response.status(201).json(savedSkill)
 })
 
 // update skill
 skillsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
-  const body = request.body
-
-  const skill = {
-    name: body.name,
-    level: body.level,
-    usedOn: body.usedOn,
+  const skillId = Number(request.params.id)
+  const skill = await Skill.findByPk(skillId)
+  if (skill) {
+    const body = request.body
+    skill.name = body.name
+    skill.level = body.level
+    skill.usedOn = body.usedOn || ''
+    await skill.save()
+    response.json(skill)
+  } else {
+    response.status(404).end()
   }
-
-  const updatedSkill = await Skill
-    .findByIdAndUpdate(request.params.id, skill, { new: true })
-  response.json(updatedSkill)
 })
 
 // delete skill
 skillsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
-  await Skill
-    .findByIdAndDelete(request.params.id)
-  response.status(204).end()
+  const skillId = Number(request.params.id)
+  const skill = await Skill.findByPk(skillId)
+  if (skill) {
+    await skill.destroy()
+    response.status(204).end()
+  } else {
+    response.status(404).end()
+  }
 })
 
 export default skillsRouter

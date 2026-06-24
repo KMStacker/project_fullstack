@@ -5,48 +5,50 @@ const projectsRouter = express.Router()
 
 // get all projects
 projectsRouter.get('/', async (_request: express.Request, response: express.Response) => {
-  const projects = await Project
-    .find({})
+  const projects = await Project.findAll()
   response.json(projects)
 })
 
 // create new project
 projectsRouter.post('/', async (request: express.Request, response: express.Response) => {
   const body = request.body
-
-  const project = new Project({
+  const savedProject = await Project.create({
     title: body.title,
     description: body.description || '',
     technologies: body.technologies || '',
     githubUrl: body.githubUrl || '',
   })
-
-  const savedProject = await project.save()
   response.status(201).json(savedProject)
 })
 
 // update project
 projectsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
-  const body = request.body
-
-  const project = {
-    title: body.title,
-    description: body.description || '',
-    technologies: body.technologies || '',
-    githubUrl: body.githubUrl || '',
+  const projectId = Number(request.params.id)
+  const project = await Project.findByPk(projectId)
+  if (project) {
+    const body = request.body
+    project.title = body.title
+    project.description = body.description || ''
+    project.technologies = body.technologies || ''
+    project.githubUrl = body.githubUrl || ''
+    await project.save()
+    response.json(project)
+  } else {
+    response.status(404).end()
   }
-
-  const updatedProject = await Project
-    .findByIdAndUpdate(request.params.id, project, { new: true })
-  response.json(updatedProject)
 })
 
 
 // delete project
 projectsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
-  await Project
-    .findByIdAndDelete(request.params.id)
-  response.status(204).end()
+  const projectId = Number(request.params.id)
+  const project = await Project.findByPk(projectId)
+  if (project) {
+    await project.destroy()
+    response.status(204).end()
+  } else {
+    response.status(404).end()
+  }
 })
 
 export default projectsRouter
