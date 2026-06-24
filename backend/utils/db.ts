@@ -1,12 +1,41 @@
-import mongoose from 'mongoose'
+import { Sequelize } from 'sequelize'
+import { Umzug, SequelizeStorage } from 'umzug'
 import * as config from './config'
 
+export const sequelize = new Sequelize(config.MONGODB_URI || '', {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  logging: false
+})
+
+const runMigrations = async () => {
+  const migrator = new Umzug({
+    migrations: {
+      glob: 'backend/migrations/*.js',
+    },
+    storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
+    context: sequelize.getQueryInterface(),
+    logger: console,
+  })
+
+  const migrations = await migrator.up()
+  console.log('Migrations up to date', {
+    files: migrations.map((mig) => mig.name),
+  })
+}
+
 export const connectDb = async (): Promise<void> => {
-  if (config.MONGODB_URI) {
-    console.log('Connecting to db:', config.MONGODB_URI.substring(0, 14), '...', config.MONGODB_URI.substring(40))
-    await mongoose.connect(config.MONGODB_URI)
-    console.log('Connected to db')
-  } else {
-    console.error('MONGODB_URI is not defined in .env')
+  try {
+    await sequelize.authenticate()
+    await runMigrations()
+    console.log('Connected to Postgres db')
+  } catch (error) {
+    console.error('Failed to connect to the database:', error)
+    throw error
   }
 }
