@@ -1,39 +1,38 @@
-import mongoose from 'mongoose'
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../utils/db'
 
-export interface IUser {
-  username: string
-  passwordHash: string
-  role: 'USER' | 'ADMIN'
+export class User extends Model {
+  public id!: number
+  public username!: string
+  public passwordHash!: string
+  public role!: string
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+User.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   username: {
-    type: String,
-    required: true,
-    unique: true,
-    minlength: 3
+    type: DataTypes.TEXT,
+    allowNull: false,
+    unique: true
   },
   passwordHash: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   role: {
-    type: String,
-    required: true,
-    enum: ['USER', 'ADMIN'],
-    default: 'USER'
+    type: DataTypes.TEXT,
+    allowNull: false,
+    defaultValue: 'USER'
   }
+}, {
+  sequelize,
+  underscored: true,
+  timestamps: false,
+  modelName: 'user'
 })
-
-userSchema.set('toJSON', {
-  transform: (_document, returnedObject: any) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-    delete returnedObject.passwordHash
-  }
-})
-
-const User = mongoose.model<IUser>('User', userSchema)
 
 export default User

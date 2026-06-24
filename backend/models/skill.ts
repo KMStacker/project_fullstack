@@ -1,15 +1,36 @@
-import mongoose from 'mongoose'
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../utils/db'
 
-export interface ISkill {
-  name: string
-  level: string
-  usedOn: string
+export class Skill extends Model {
+  public id!: number
+  public name!: string
+  public level!: string
+  public usedOn!: string
 }
 
-const skillSchema = new mongoose.Schema<ISkill>({
-  name: String,
-  level: String,
-  usedOn: String,
+Skill.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  level: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  usedOn: {
+    type: DataTypes.TEXT,
+    defaultValue: ''
+  }
+}, {
+  sequelize,
+  underscored: true,
+  timestamps: false,
+  modelName: 'skill'
 })
 
-export default mongoose.model<ISkill>('Skill', skillSchema)
+export default Skill
