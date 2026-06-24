@@ -21,12 +21,17 @@
 |30.8.2025|1|added request logger middleware|
 |31.8.2025|11|implemented full functionality for frontend AdminPage|
 |13.6.2026|1|converted backend environment and configuration to TypeScript|
-| |1|converted utility modules to TypeScript|
-| |2|converted database models to TypeScript and fixed JSON transformations|
-| |2|converted Express middlewares to TypeScript and created CustomRequest interface|
-| |4|converted all controllers and the admin creation script to TypeScript, and verified full functionality|
+|         |1|converted utility modules to TypeScript|
+|         |2|converted database models to TypeScript and fixed JSON transformations|
+|         |2|converted Express middlewares to TypeScript and created CustomRequest interface|
+|         |4|converted all controllers and the admin creation script to TypeScript, and verified full functionality|
 |17.6.2026|1|converted frontend environment, configuration, services, and the main file to TypeScript|
-| |2|converted components and main pages to TypeScript and made some minor fixes|
-| |3|converted AdminPage and App components to TypeScript and solved some basic type issues|
-| |1|fixed TypeScript compilation errors and did some quick testing|
-|**Total**|**77**||
+|         |2|converted components and main pages to TypeScript and made some minor fixes|
+|         |3|converted AdminPage and App components to TypeScript and solved some basic type issues|
+|         |1|fixed TypeScript compilation errors and did some quick testing|
+|22.6.2026|3|Evaluated relational data models, initialized Sequelize, and wrote Umzug database migrations|
+|         |2|Migrated Project, Skill and User models to standard class structures verifying type alignments|
+|         |3|Refactored project and skill controllers and resolved TypeScript integer parameter casting issues|
+|         |3|Rewrote authentication layers, login controllers, and admin creation script with connection teardown|
+|         |1|Updated global error handler middleware and verified constraint troubleshooting patterns|
+|**Total**|**89**||

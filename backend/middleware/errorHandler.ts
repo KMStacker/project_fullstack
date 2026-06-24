@@ -12,8 +12,10 @@ const errorHandler = (error: Error, _request: Request, response: Response, next:
     return response.status(401).json({ error: 'invalid token' })
   } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({ error: 'token expired' })
-  } else if (error.name === 'MongoServerError' && error.message.includes('E11000')) {
-    return response.status(400).json({ error: 'username must be unique' })
+  } else if (error.name === 'SequelizeUniqueConstraintError') {
+  return response.status(400).json({ error: 'username must be unique' })
+  } else if (error.name === 'SequelizeValidationError') {
+  return response.status(400).json({ error: error.message })
   } else if (error.name === 'AuthorizationError') {
     return response.status(403).json({ error: 'forbidden: admin access required' })
   }
