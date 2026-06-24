@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 dotenv.config()
-import mongoose from 'mongoose'
+import { connectDb, sequelize } from './utils/db'
 import bcrypt from 'bcrypt'
 import User from './models/user'
 import * as logger from './utils/logger'
@@ -10,11 +10,7 @@ const createAdminAccount = async (): Promise<void> => {
   try {
     // connecting to DB
     logger.info('Connecting to db...')
-    if (!process.env.MONGODB_URI) {
-      logger.error('MONGODB_URI is not defined in .env')
-      return
-    }
-    await mongoose.connect(process.env.MONGODB_URI)
+    await connectDb()
     logger.info('Connected to db!')
 
     // creating admin account
@@ -25,7 +21,7 @@ const createAdminAccount = async (): Promise<void> => {
     }
 
     logger.info('Checking if admin account already exists...')
-    const existingAdmin = await User.findOne({ role: 'ADMIN' })
+    const existingAdmin = await User.findOne({ where: { role: 'ADMIN' } })
     if (existingAdmin) {
       logger.info('Admin account already exists, will stop creating admin account')
       return
@@ -37,14 +33,12 @@ const createAdminAccount = async (): Promise<void> => {
     logger.info('Password hashed... ')
 
     logger.info('Making admin...')
-    const admin = new User({
+    await User.create({
       username: 'admin',
       passwordHash: hashedPassword,
       role: 'ADMIN'
     })
 
-    logger.info('Saving admin...')
-    await admin.save()
     logger.info('Admin saved...')
 
     logger.info(' All done and dusted for the sake of the admin account!')
@@ -53,11 +47,9 @@ const createAdminAccount = async (): Promise<void> => {
     logger.error('Error creating admin account:', error.message)
   } finally {
     logger.info('Closing db connection...')
-    await mongoose.connection.close()
+    await sequelize.close()
     logger.info('Db connection closed!')
   }
 }
 
 createAdminAccount()
-
-
