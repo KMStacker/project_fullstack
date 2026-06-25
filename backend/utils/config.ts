@@ -6,9 +6,9 @@ if (!PORT) {
   console.error('PORT is not defined in .env')
 }
 
-export const MONGODB_URI = process.env.MONGODB_URI
-if (!MONGODB_URI) {
-  console.error('MONGODB_URI is not defined in .env')
+export const DATABASE_URL = process.env.DATABASE_URL
+if (!DATABASE_URL) {
+  console.error('DATABASE_URL is not defined in .env')
 }
 
 export const SECRET = process.env.SECRET

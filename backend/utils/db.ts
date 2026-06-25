@@ -1,23 +1,42 @@
 import { Sequelize } from 'sequelize'
 import { Umzug, SequelizeStorage } from 'umzug'
 import * as config from './config'
+// import path from 'path'
 
-export const sequelize = new Sequelize(config.MONGODB_URI || '', {
+
+const isProduction = process.env.NODE_ENV === 'production'
+
+export const sequelize = new Sequelize(config.DATABASE_URL || '', {
   dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-  logging: false
+  dialectOptions: isProduction
+    ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        },
+      }
+    : {},
 })
 
 const runMigrations = async () => {
   const migrator = new Umzug({
-    migrations: {
-      glob: 'backend/migrations/*.js',
-    },
+    migrations: [
+      {
+        name: '001_initialize_projects.js',
+        up: async (params) => require('../migrations/001_initialize_projects.js').up(params),
+        down: async (params) => require('../migrations/001_initialize_projects.js').down(params),
+      },
+      {
+        name: '002_initialize_skills.js',
+        up: async (params) => require('../migrations/002_initialize_skills.js').up(params),
+        down: async (params) => require('../migrations/002_initialize_skills.js').down(params),
+      },
+      {
+        name: '003_initialize_users.js',
+        up: async (params) => require('../migrations/003_initialize_users.js').up(params),
+        down: async (params) => require('../migrations/003_initialize_users.js').down(params),
+      },
+    ],
     storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
     context: sequelize.getQueryInterface(),
     logger: console,

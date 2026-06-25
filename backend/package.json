@@ -20,6 +20,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
+    "pg": "^8.22.0",
     "sequelize": "^6.37.8",
     "umzug": "^3.8.3"
   },
