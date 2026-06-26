@@ -1,5 +1,6 @@
 import express from 'express'
 import Skill from '../models/skill'
+import { adminAuthorization } from '../middleware/adminAuthorization'
 
 
 const skillsRouter = express.Router()
@@ -11,7 +12,7 @@ skillsRouter.get('/', async (_request: express.Request, response: express.Respon
 })
 
 // create new skill
-skillsRouter.post('/', async (request: express.Request, response: express.Response) => {
+skillsRouter.post('/', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const body = request.body
   const savedSkill = await Skill.create({
     name: body.name,
@@ -22,7 +23,7 @@ skillsRouter.post('/', async (request: express.Request, response: express.Respon
 })
 
 // update skill
-skillsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
+skillsRouter.put('/:id', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const skillId = Number(request.params.id)
   const skill = await Skill.findByPk(skillId)
   if (skill) {
@@ -38,7 +39,7 @@ skillsRouter.put('/:id', async (request: express.Request, response: express.Resp
 })
 
 // delete skill
-skillsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
+skillsRouter.delete('/:id', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const skillId = Number(request.params.id)
   const skill = await Skill.findByPk(skillId)
   if (skill) {

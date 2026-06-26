@@ -1,5 +1,6 @@
 import express from 'express'
 import Project from '../models/project'
+import { adminAuthorization } from '../middleware/adminAuthorization'
 
 const projectsRouter = express.Router()
 
@@ -10,7 +11,7 @@ projectsRouter.get('/', async (_request: express.Request, response: express.Resp
 })
 
 // create new project
-projectsRouter.post('/', async (request: express.Request, response: express.Response) => {
+projectsRouter.post('/', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const body = request.body
   const savedProject = await Project.create({
     title: body.title,
@@ -22,7 +23,7 @@ projectsRouter.post('/', async (request: express.Request, response: express.Resp
 })
 
 // update project
-projectsRouter.put('/:id', async (request: express.Request, response: express.Response) => {
+projectsRouter.put('/:id', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const projectId = Number(request.params.id)
   const project = await Project.findByPk(projectId)
   if (project) {
@@ -40,7 +41,7 @@ projectsRouter.put('/:id', async (request: express.Request, response: express.Re
 
 
 // delete project
-projectsRouter.delete('/:id', async (request: express.Request, response: express.Response) => {
+projectsRouter.delete('/:id', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const projectId = Number(request.params.id)
   const project = await Project.findByPk(projectId)
   if (project) {
