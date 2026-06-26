@@ -2,11 +2,11 @@ import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../utils/db'
 
 export class Project extends Model {
-  public id!: number
-  public title!: string
-  public description!: string
-  public technologies!: string
-  public githubUrl!: string
+  declare id: number
+  declare title: string
+  declare description: string
+  declare technologies: string
+  declare githubUrl: string
 }
 
 Project.init({

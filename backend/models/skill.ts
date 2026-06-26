@@ -2,10 +2,10 @@ import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../utils/db'
 
 export class Skill extends Model {
-  public id!: number
-  public name!: string
-  public level!: string
-  public usedOn!: string
+  declare id: number
+  declare name: string
+  declare level: string
+  declare usedOn: string
 }
 
 Skill.init({
