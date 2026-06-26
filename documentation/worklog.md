@@ -36,4 +36,6 @@
 |         |1|updated global error handler middleware and verified constraint troubleshooting patterns|
 |23.6.2026|3|setting up local PostgreSQL database and config modules|
 |         |7|testing, finding errors and debugging e.g. "relation does not exist"|
-|**Total**|**99**||
+|         |1|refactoring models to use strict TypeScript declare syntax|
+|         |1|securing backend routes with adminAuthorization middleware|
+|**Total**|**101**||
