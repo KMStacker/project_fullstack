@@ -5,6 +5,7 @@ import HomePage  from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
 import SkillsPage from './pages/SkillsPage'
 import AdminPage from './pages/AdminPage'
+import GuestbookPage from './pages/GuestbookPage'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 
@@ -49,6 +50,7 @@ const App = (): JSX.Element => {
           <Link className="button" to="/">Home</Link>
           <Link className="button" to="/projects">Projects</Link>
           <Link className="button" to="/skills">Skills</Link>
+          <Link className="button" to="/guestbook">Guestbook</Link>
           {user && user.role === 'ADMIN' && (
             <Link className="button" to="/admin">Admin</Link>
           )}
@@ -60,6 +62,7 @@ const App = (): JSX.Element => {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/skills" element={<SkillsPage />} />
         <Route path="/admin" element={<AdminPage user={user} />} />
+        <Route path="/guestbook" element={<GuestbookPage user={user} handleLogin={handleLogin} />} />
       </Routes>
     </BrowserRouter>
   )
