@@ -8,6 +8,7 @@ import errorHandler from './middleware/errorHandler'
 import usersRouter from './controllers/users'
 import loginRouter from './controllers/login'
 import requestLogger from './middleware/requestLogger'
+import commentsRouter from './controllers/comments'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/api/projects', projectsRouter)
 app.use('/api/skills', skillsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/comments', commentsRouter)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)

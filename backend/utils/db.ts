@@ -36,6 +36,11 @@ const runMigrations = async () => {
         up: async (params) => require('../migrations/003_initialize_users.js').up(params),
         down: async (params) => require('../migrations/003_initialize_users.js').down(params),
       },
+      {
+        name: '004_initialize_comments.js',
+        up: async (params) => require('../migrations/004_initialize_comments.js').up(params),
+        down: async (params) => require('../migrations/004_initialize_comments.js').down(params),
+      },
     ],
     storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
     context: sequelize.getQueryInterface(),
