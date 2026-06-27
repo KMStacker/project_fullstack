@@ -38,4 +38,6 @@
 |         |7|testing, finding errors and debugging e.g. "relation does not exist"|
 |         |1|refactoring models to use strict TypeScript declare syntax|
 |         |1|securing backend routes with adminAuthorization middleware|
-|**Total**|**101**||
+|24.6.2026|6|testing and debugging - fixed admin 401 errors, synchronized frontend components with postgres integer ids, and configured jwt bearer headers|
+|         |4|implemented backend for visitor comments including database migrations, models, input validation, and secure API endpoints|
+|**Total**|**111**||
