@@ -59,7 +59,7 @@ const App = (): JSX.Element => {
         <Route path="/" element={<HomePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/skills" element={<SkillsPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminPage user={user} />} />
       </Routes>
     </BrowserRouter>
   )

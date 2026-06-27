@@ -2,7 +2,7 @@ import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
 export interface Skill {
-  _id:string
+  id:string
   name: string
   level: string
   usedOn: string
@@ -25,7 +25,7 @@ const SkillsPage = (): JSX.Element => {
       <h4>Here is the list of skills:</h4>
       <ul>
         {skills.map(skill => (
-          <li key={skill._id}>
+          <li key={skill.id}>
             {skill.name}
           </li>
         ))}

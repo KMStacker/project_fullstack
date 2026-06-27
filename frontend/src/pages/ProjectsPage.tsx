@@ -2,7 +2,7 @@ import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
 export interface Project {
-  _id: string
+  id: string
   title: string
   description: string
   technologies: string
@@ -26,7 +26,7 @@ const ProjectsPage = (): JSX.Element => {
       <h4>Here is the list of projects:</h4>
       <ul>
         {projects.map(project => (
-          <li key={project._id}>
+          <li key={project.id}>
             {project.title}
           </li>
         ))}

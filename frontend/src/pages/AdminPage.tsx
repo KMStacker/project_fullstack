@@ -2,7 +2,7 @@ import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
 export interface Project {
-  _id: string
+  id: number
   title: string
   description: string
   technologies: string
@@ -10,7 +10,7 @@ export interface Project {
 }
 
 export interface Skill {
-  _id:string
+  id: number
   name: string
   level: string
   usedOn: string
@@ -18,7 +18,17 @@ export interface Skill {
   technologies?: string
 }
 
-const AdminPage = (): JSX.Element => {
+interface User {
+  username: string
+  token: string
+  role: 'USER' | 'ADMIN'
+}
+
+interface AdminPageProps {
+  user: User | null
+}
+
+const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
   const [projects, setProjects] = useState<Project[]>([])
   const [newProject, setNewProject] = useState({
     title: '',
@@ -27,7 +37,7 @@ const AdminPage = (): JSX.Element => {
     githubUrl: ''
   })
   const [editingProject, setEditingProject] = useState<Project | null>(null)
-  const [visibleProjects, setVisibleProjects] = useState<string[]>([])
+  const [visibleProjects, setVisibleProjects] = useState<number[]>([])
   const [addingProject, setAddingProject] = useState<boolean>(false)
 
   const [skills, setSkills] = useState<Skill[]>([])
@@ -37,7 +47,7 @@ const AdminPage = (): JSX.Element => {
     usedOn: ''
   })
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
-  const [visibleSkills, setVisibleSkills] = useState<string[]>([])
+  const [visibleSkills, setVisibleSkills] = useState<number[]>([])
   const [addingSkill, setAddingSkill] = useState<boolean>(false)
 
   useEffect(() => {
@@ -56,7 +66,7 @@ const AdminPage = (): JSX.Element => {
       })
   }, [])
 
-  const toggleInfo = (id: string, visibleItems: string[], setVisibleItems: React.Dispatch<React.SetStateAction<string[]>>): void => {
+  const toggleInfo = (id: number, visibleItems: number[], setVisibleItems: React.Dispatch<React.SetStateAction<number[]>>): void => {
     if (visibleItems.includes(id)) {
       setVisibleItems(visibleItems.filter(itemId => itemId !== id))
     } else {
@@ -76,7 +86,10 @@ const AdminPage = (): JSX.Element => {
   const handleAddProject = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
     try {
-      const response = await axios.post('/api/projects', newProject)
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      const response = await axios.post('/api/projects', newProject, config)
       setProjects([...projects, response.data])
       setNewProject({
         title: '',
@@ -90,10 +103,13 @@ const AdminPage = (): JSX.Element => {
     }
   }
 
-  const handleDeleteProject = async (id: string): Promise<void> => {
+  const handleDeleteProject = async (id: number): Promise<void> => {
     try {
-      await axios.delete(`/api/projects/${id}`)
-      setProjects(projects.filter(project => project._id !== id))
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      await axios.delete(`/api/projects/${id}`, config)
+      setProjects(projects.filter(project => project.id !== id))
     } catch (error) {
       console.error('Error deleting project:', error)
     }
@@ -103,8 +119,11 @@ const AdminPage = (): JSX.Element => {
     event.preventDefault()
     if (!editingProject) return
     try {
-      const response = await axios.put(`/api/projects/${editingProject._id}`, editingProject)
-      setProjects(projects.map(project => project._id === editingProject._id ? response.data : project))
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      const response = await axios.put(`/api/projects/${editingProject.id}`, editingProject, config)
+      setProjects(projects.map(project => project.id === editingProject.id ? response.data : project))
       setEditingProject(null)
     } catch (error) {
       console.error('Error editing project:', error)
@@ -114,7 +133,10 @@ const AdminPage = (): JSX.Element => {
   const handleAddSkill = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
     try {
-      const response = await axios.post('/api/skills', newSkill)
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      const response = await axios.post('/api/skills', newSkill, config)
       setSkills([...skills, response.data])
       setNewSkill({
         name: '',
@@ -127,10 +149,13 @@ const AdminPage = (): JSX.Element => {
     }
   }
 
-  const handleDeleteSkill = async (id: string): Promise<void> => {
+  const handleDeleteSkill = async (id: number): Promise<void> => {
     try {
-      await axios.delete(`/api/skills/${id}`)
-      setSkills(skills.filter(skill => skill._id !== id))
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      await axios.delete(`/api/skills/${id}`, config)
+      setSkills(skills.filter(skill => skill.id !== id))
     } catch (error) {
       console.error('Error deleting skill:', error)
     }
@@ -140,8 +165,11 @@ const AdminPage = (): JSX.Element => {
     event.preventDefault()
     if (!editingSkill) return
     try {
-      const response = await axios.put(`/api/skills/${editingSkill._id}`, editingSkill)
-      setSkills(skills.map(skill => skill._id === editingSkill._id ? response.data : skill))
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` }
+      }
+      const response = await axios.put(`/api/skills/${editingSkill.id}`, editingSkill, config)
+      setSkills(skills.map(skill => skill.id === editingSkill.id ? response.data : skill))
       setEditingSkill(null)
     } catch (error) {
       console.error('Error editing skill:', error)
@@ -180,13 +208,13 @@ const AdminPage = (): JSX.Element => {
 
         <h4 style={{ marginBottom: '5px'}}>Projects:</h4>
         {projects.map(project => (
-          <li key={project._id}>
+          <li key={project.id}>
             {project.title} &nbsp;
-            <button className="button" onClick={() => toggleInfo(project._id, visibleProjects, setVisibleProjects)}>{visibleProjects.includes(project._id) ? 'Hide info' : 'Show info'}</button>
-            <button className="button" onClick={() => { setEditingProject(editingProject && editingProject._id === project._id ? null : project) }}>{editingProject && editingProject._id === project._id ? 'Stop editing' : 'Edit'}</button>
-            <button className="button" onClick={() => handleDeleteProject(project._id)}>Delete</button>
+            <button className="button" onClick={() => toggleInfo(project.id, visibleProjects, setVisibleProjects)}>{visibleProjects.includes(project.id) ? 'Hide info' : 'Show info'}</button>
+            <button className="button" onClick={() => { setEditingProject(editingProject && editingProject.id === project.id ? null : project) }}>{editingProject && editingProject.id === project.id ? 'Stop editing' : 'Edit'}</button>
+            <button className="button" onClick={() => handleDeleteProject(project.id)}>Delete</button>
             
-            {visibleProjects.includes(project._id) && (
+            {visibleProjects.includes(project.id) && (
               <ul>
                 <li>
                   Description: {project.description}
@@ -199,7 +227,7 @@ const AdminPage = (): JSX.Element => {
                 </li>
               </ul>
             )}
-            {editingProject && editingProject._id === project._id && (
+            {editingProject && editingProject.id === project.id && (
               <div>
                 <h4>Here you can edit the project you have chosen: "{editingProject.title}"</h4>
                 <form onSubmit={handleEditProject}>
@@ -242,13 +270,13 @@ const AdminPage = (): JSX.Element => {
 
       <h4 style={{ marginBottom: '5px'}}>Skills:</h4>
       {skills.map(skill => (
-        <li key={skill._id}>
+        <li key={skill.id}>
           {skill.name} &nbsp;
-          <button className="button" onClick={() => toggleInfo(skill._id, visibleSkills, setVisibleSkills)}>{visibleSkills.includes(skill._id) ? 'Hide info' : 'Show info'}</button>
-          <button className="button" onClick={() => { setEditingSkill(editingSkill && editingSkill._id === skill._id ? null : skill) }}>{editingSkill && editingSkill._id === skill._id ? 'Stop editing' : 'Edit'}</button>
-          <button className="button" onClick={() => handleDeleteSkill(skill._id)}>Delete</button>
+          <button className="button" onClick={() => toggleInfo(skill.id, visibleSkills, setVisibleSkills)}>{visibleSkills.includes(skill.id) ? 'Hide info' : 'Show info'}</button>
+          <button className="button" onClick={() => { setEditingSkill(editingSkill && editingSkill.id === skill.id ? null : skill) }}>{editingSkill && editingSkill.id === skill.id ? 'Stop editing' : 'Edit'}</button>
+          <button className="button" onClick={() => handleDeleteSkill(skill.id)}>Delete</button>
           
-          {visibleSkills.includes(skill._id) && (
+          {visibleSkills.includes(skill.id) && (
             <ul>
               <li>
                 Level: {skill.level}
@@ -258,7 +286,7 @@ const AdminPage = (): JSX.Element => {
               </li>
             </ul>
           )}
-          {editingSkill && editingSkill._id === skill._id && (
+          {editingSkill && editingSkill.id === skill.id && (
             <div>
               <h4>Here you can edit the skill you have chosen: "{editingSkill.name}"</h4>
               <form onSubmit={handleEditSkill}>
