@@ -1,59 +1,49 @@
 import React, { useState, JSX } from 'react'
 
-interface User {
-  username: string
-  token: string
-  role: 'USER' | 'ADMIN'
-}
-
 interface LoginFormProps {
-  user: User | null
-  handleLogin: (usernae: string, password: string) => Promise<void> | void
-  handleLogout: () => void
+  handleLogin: (username: string, password: string) => Promise<void> | void
+  onSuccess: () => void
 }
 
-const LoginForm = ({ user, handleLogin, handleLogout }: LoginFormProps): JSX.Element => {
+const LoginForm = ({ handleLogin, onSuccess }: LoginFormProps): JSX.Element => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
   const submitLogin = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    handleLogin(username, password)
+    await handleLogin(username, password)
     setUsername('')
     setPassword('')
-  }
-
-  if (user) {
-    return (
-      <div className="login-form">
-        <p>
-          Welcome, {user.username}! &nbsp;
-          <button className="button" onClick={handleLogout}>Logout</button>
-        </p>
-      </div>
-    )
+    onSuccess()
   }
 
   return (
-    <form onSubmit={submitLogin} className="login-form">
-      <div>
-        <input
-          type="text"
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
-          placeholder="Username"
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-          placeholder="Password"
-        />
-      </div>
-      <button type="submit" className="button">Login</button>
-    </form>
+    <div className="feature-editor" style={{ padding: '10px' }}>
+      <h2>Login to Account</h2>
+      <form onSubmit={submitLogin}>
+        <div className="editor-section" style={{ marginBottom: '10px' }}>
+          <input
+            type="text"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+            placeholder="Username"
+            required
+          />
+        </div>
+        <div className="editor-section" style={{ marginBottom: '10px' }}>
+          <input
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+            placeholder="Password"
+            required
+          />
+        </div>
+        <div className="inline-header-row">
+          <button type="submit" className="button">Login</button>
+        </div>
+      </form>
+    </div>
   )
 }
 
