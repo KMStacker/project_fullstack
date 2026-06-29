@@ -71,15 +71,15 @@ const RegisterForm = ({ handleLogin, onSuccess, onCancel }: RegisterFormProps): 
           <input type="password" value={regPasswordAgain} onChange={({ target }) => setRegPasswordAgain(target.value)} placeholder="Password again" required />
         </div>
         <div className="editor-section" style={{ marginBottom: '10px' }}>
-          <button type="button" onClick={() => setShowOptional(!showOptional)} style={{ cursor: 'pointer' }}>
+          <button type="button" className="button" onClick={() => setShowOptional(!showOptional)} style={{ cursor: 'pointer', margin: 0 }}>
             {showOptional ? 'Hide optional information' : 'Show optional information'}
           </button>
           {showOptional && (
-            <div style={{ marginTop: '5px', paddingLeft: '10px' }}>
-              <div style={{ marginBottom: '5px' }}>
+            <div style={{ marginTop: '10px' }}>
+              <div style={{ marginBottom: '10px' }}>
                 <input type="email" value={email} onChange={({ target }) => setEmail(target.value)} placeholder="Email (optional)" />
               </div>
-              <div>
+              <div style={{ marginBottom: '10px' }}>
                 <input type="text" value={phone} onChange={({ target }) => setPhone(target.value)} placeholder="Phone number (optional)" />
               </div>
             </div>
@@ -87,7 +87,7 @@ const RegisterForm = ({ handleLogin, onSuccess, onCancel }: RegisterFormProps): 
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div className="inline-header-row">
-          <button type="submit" className="button">Register</button>
+          <button type="submit" className="button" style={{ margin: 0 }}>Register</button>
           {onCancel && (
             <button type="button" className="button" onClick={onCancel}>Cancel</button>
           )}
