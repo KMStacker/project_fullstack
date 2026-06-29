@@ -1,5 +1,4 @@
 import React, { useState, useEffect, JSX } from 'react'
-import axios from 'axios'
 import commentService, { Comment } from '../services/comments'
 import RegisterForm from '../components/RegisterForm'
 
