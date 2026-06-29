@@ -9,6 +9,7 @@ import GuestbookPage from './pages/GuestbookPage'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 import RegisterForm from './components/RegisterForm'
+import SparkleOverlay from './components/SparkleOverlay'
 
 interface User {
   username: string
@@ -47,6 +48,7 @@ const App = (): JSX.Element => {
 
   return (
     <BrowserRouter>
+      <SparkleOverlay />
       <div className="nav-bar">
         <div>
           <Link className="button" to="/">Home</Link>
