@@ -64,7 +64,7 @@ const SparkleOverlay = (): JSX.Element => {
         ctx.beginPath()
         ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2)
         ctx.fillStyle = sparkle.color
-        ctx.globalAlpha = sparkle.opacity
+        ctx.globalAlpha = Math.max(0, sparkle.opacity)
         ctx.fill()
 
         return sparkle.opacity > 0
