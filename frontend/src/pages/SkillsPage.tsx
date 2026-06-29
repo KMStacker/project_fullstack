@@ -2,7 +2,7 @@ import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
 export interface Skill {
-  id:string
+  id: number
   name: string
   level: string
   usedOn: string
@@ -10,6 +10,7 @@ export interface Skill {
 
 const SkillsPage = (): JSX.Element => {
   const [skills, setSkills] = useState<Skill[]>([])
+  const [visibleSkills, setVisibleSkills] = useState<number[]>([])
 
   useEffect(() => {
     axios
@@ -19,14 +20,31 @@ const SkillsPage = (): JSX.Element => {
       })
   }, [])
 
+  const toggleInfo = (id: number): void => {
+    if (visibleSkills.includes(id)) {
+      setVisibleSkills(visibleSkills.filter(itemId => itemId !== id))
+    } else {
+      setVisibleSkills([...visibleSkills, id])
+    }
+  }
+
   return (
     <div className="content-window">
       <h1>This is the skills page!</h1>
       <h4>Here is the list of skills:</h4>
       <ul>
         {skills.map(skill => (
-          <li key={skill.id}>
-            {skill.name}
+          <li key={skill.id} style={{ marginBottom: '10px' }}>
+            {skill.name} &nbsp;
+            <button className="button" onClick={() => toggleInfo(skill.id)}>
+              {visibleSkills.includes(skill.id) ? 'Hide info' : 'Show info'}
+            </button>
+            {visibleSkills.includes(skill.id) && (
+              <ul>
+                <li>Level: {skill.level}</li>
+                <li>UsedOn: {skill.usedOn}</li>
+              </ul>
+            )}
           </li>
         ))}
       </ul>
