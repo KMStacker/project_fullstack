@@ -8,6 +8,7 @@ import AdminPage from './pages/AdminPage'
 import GuestbookPage from './pages/GuestbookPage'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
+import RegisterForm from './components/RegisterForm'
 
 interface User {
   username: string
@@ -17,6 +18,7 @@ interface User {
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
+  const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -55,7 +57,12 @@ const App = (): JSX.Element => {
             <Link className="button" to="/admin">Admin</Link>
           )}
         </div>
-        <LoginForm user={user} handleLogin={handleLogin} handleLogout={handleLogout} />
+        <div className="separate-boxes">
+          <LoginForm user={user} handleLogin={handleLogin} handleLogout={handleLogout} />
+          {!user && (
+            <button className="button" type="button" onClick={() => setShowRegisterModal(true)}>Register</button>
+          )}
+        </div>
       </div>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -64,6 +71,18 @@ const App = (): JSX.Element => {
         <Route path="/admin" element={<AdminPage user={user} />} />
         <Route path="/guestbook" element={<GuestbookPage user={user} handleLogin={handleLogin} />} />
       </Routes>
+
+      {showRegisterModal && (
+        <div className="modal-overlay" onClick={() => setShowRegisterModal(false)}>
+          <div className="modal" onClick={(event) => event.stopPropagation()}>
+            <RegisterForm
+              handleLogin={handleLogin}
+              onSuccess={() => setShowRegisterModal(false)}
+              onCancel={() => setShowRegisterModal(false)}
+            />
+          </div>
+        </div>
+      )}
     </BrowserRouter>
   )
 }

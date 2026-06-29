@@ -28,7 +28,7 @@ const LoginForm = ({ user, handleLogin, handleLogout }: LoginFormProps): JSX.Ele
       <div className="login-form">
         <p>
           Welcome, {user.username}! &nbsp;
-          <button onClick={handleLogout}>Logout</button>
+          <button className="button" onClick={handleLogout}>Logout</button>
         </p>
       </div>
     )
@@ -52,7 +52,7 @@ const LoginForm = ({ user, handleLogin, handleLogout }: LoginFormProps): JSX.Ele
           placeholder="Password"
         />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit" className="button">Login</button>
     </form>
   )
 }
