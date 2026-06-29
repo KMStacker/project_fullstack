@@ -1,6 +1,7 @@
 import React, { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 import commentService, { Comment } from '../services/comments'
+import RegisterForm from '../components/RegisterForm'
 
 interface User {
   username: string
@@ -18,13 +19,6 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
   const [newComment, setNewComment] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [isRegistering, setIsRegistering] = useState<boolean>(false)
-  const [regUsername, setRegUsername] = useState<string>('')
-  const [regPassword, setRegPassword] = useState<string>('')
-  const [regPasswordAgain, setRegPasswordAgain] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [phone, setPhone] = useState<string>('')
-  const [showOptional, setShowOptional] = useState<boolean>(false)
-  const [showModal, setShowModal] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -54,48 +48,9 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
     }
   }
 
-  const handleRegister = async (event: React.SyntheticEvent): Promise<void> => {
-    event.preventDefault()
-    if (regPassword !== regPasswordAgain) {
-      setError('Passwords do not match')
-      return
-    }
-    try {
-      await axios.post('/api/users', {
-        username: regUsername,
-        password: regPassword
-      })
-      setShowModal(true)
-      setError(null)
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Registration failed')
-    }
-  }
-
-  const handleModalChoice = async (autoLogin: boolean): Promise<void> => {
-    setShowModal(false)
-    if (autoLogin) {
-      await handleLogin(regUsername, regPassword)
-    }
-    setIsRegistering(false)
-    setRegUsername('')
-    setRegPassword('')
-    setRegPasswordAgain('')
-    setEmail('')
-    setPhone('')
-  }
-
   return (
     <div className="content-window">
       <h1>Guestbook</h1>
-
-      {showModal && (
-        <div style={{ padding: '10px', background: '#fff', border: '1px solid #ccc', marginBottom: '15px', borderRadius: '5px' }}>
-          <p>Registration successful! Do you want to log in also?</p>
-          <button className="button" onClick={() => void handleModalChoice(true)}>Yes</button>
-          <button className="button" onClick={() => void handleModalChoice(false)}>No</button>
-        </div>
-      )}
 
       {user ? (
         <form onSubmit={handlePostComment}>
@@ -118,38 +73,12 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
               <button className="button" onClick={() => setIsRegistering(true)}>Register in to leave a comment</button>
             </div>
           ) : (
-            <div style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-              <h3>Register New Account</h3>
-              <form onSubmit={handleRegister}>
-                <div style={{ marginBottom: '5px' }}>
-                  <input type="text" value={regUsername} onChange={({ target }) => setRegUsername(target.value)} placeholder="Username" required />
-                </div>
-                <div style={{ marginBottom: '5px' }}>
-                  <input type="password" value={regPassword} onChange={({ target }) => setRegPassword(target.value)} placeholder="Password" required />
-                </div>
-                <div style={{ marginBottom: '5px' }}>
-                  <input type="password" value={regPasswordAgain} onChange={({ target }) => setRegPasswordAgain(target.value)} placeholder="Password again" required />
-                </div>
-                
-                <div style={{ marginBottom: '5px' }}>
-                  <button type="button" onClick={() => setShowOptional(!showOptional)} style={{ cursor: 'pointer' }}>
-                    {showOptional ? 'Hide optional information' : 'Show optional information'}
-                  </button>
-                  {showOptional && (
-                    <div style={{ marginTop: '5px', paddingLeft: '10px' }}>
-                      <div style={{ marginBottom: '5px' }}>
-                        <input type="email" value={email} onChange={({ target }) => setEmail(target.value)} placeholder="Email (optional)" />
-                      </div>
-                      <div>
-                        <input type="text" value={phone} onChange={({ target }) => setPhone(target.value)} placeholder="Phone number (optional)" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <button type="submit" className="button">Register</button>
-                <button type="button" className="button" onClick={() => setIsRegistering(false)}>Cancel</button>
-              </form>
+            <div style={{ marginBottom: '15px' }}>
+              <RegisterForm
+                handleLogin={handleLogin}
+                onSuccess={() => setIsRegistering(false)}
+                onCancel={() => setIsRegistering(false)}
+              />
             </div>
           )}
         </div>
