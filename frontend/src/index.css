@@ -1,3 +1,4 @@
+/*
 body {
   background-image: url('./background-image.jpg');
   background-size: cover;
@@ -5,4 +6,100 @@ body {
 
   margin: 0;
   font-family: sans-serif;
+}
+*/
+/*
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #679e6d;
+  background: linear-gradient(
+    120deg,
+    rgba(78, 187, 230, 0.67) 0%,
+    rgba(100, 212, 150, 0.67) 25%,
+    rgba(87, 199, 115, 0.67) 50%,
+    rgba(100, 212, 150, 0.67) 75%,
+    rgba(78, 187, 230, 0.67) 100%
+  );
+  background-size: 300% 300%;
+  animation: moveBackground 15s ease infinite;
+  background-attachment: fixed;
+  color: #d7bd54;
+}
+*/
+/*
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #484b4f;
+  background-image: linear-gradient(
+    120deg,
+    #111315 0%,
+    #b89742 25%,
+    #8a9597 50%,
+    #cfb53b 75%,
+    #111315 100%
+  );
+  background-size: 300% 300%;
+  animation: moveBackground 25s ease infinite;
+  background-attachment: fixed;
+  color: #e5e9ec;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+*/
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #484b4f;
+  background-image: linear-gradient(
+    120deg,
+    #0b0f19 0%,
+    #1b2a47 25%,
+    #3a506b 50%,
+    #1b2a47 75%,
+    #0b0f19 100%
+  );
+  background-size: 300% 300%;
+  animation: moveBackground 45s ease infinite;
+  background-attachment: fixed;
+  color: #f1f5f9;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before,
+body::after {
+  display: none;
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes sparkleOne {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes sparkleTwo {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.1;
+  }
 }
