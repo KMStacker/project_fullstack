@@ -1,5 +1,5 @@
 import express from 'express'
-import { connectDb } from './utils/db'
+//import { connectDb } from './utils/db'
 import projectsRouter from './controllers/projects'
 import skillsRouter from './controllers/skills'
 import tokenExtractor from './middleware/tokenExtractor'
@@ -11,8 +11,6 @@ import requestLogger from './middleware/requestLogger'
 import commentsRouter from './controllers/comments'
 
 const app = express()
-
-connectDb()
 
 app.use(express.json())
 
