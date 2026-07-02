@@ -1,0 +1,54 @@
+import { test, expect, type Page } from '@playwright/test'
+
+test.describe.configure({ mode: 'serial' })
+
+test.describe('Admin Dashboard Flow', () => {
+  let sharedPage: Page
+  const adminUsername = 'admin'
+  if (!process.env.ADMIN_PSW) {
+  throw new Error('ADMIN_PSW environment variable is missing')
+  }
+  const adminPassword: string = process.env.ADMIN_PSW
+  const uniqueTitle = `Project_${Date.now()}`
+  const description = `Description_${Date.now()}`
+  const technologies = `Technologies_${Date.now()}`
+  const githubUrl = `Url_${Date.now()}`
+
+  test.beforeAll(async ({ browser }) => {
+    sharedPage = await browser.newPage()
+  })
+
+  test.afterAll(async () => {
+    await sharedPage.close()
+  })
+
+  test('should log in successfully as admin', async () => {
+    await sharedPage.goto('/')
+    await sharedPage.getByRole('button', { name: 'Login', exact: true }).click()
+    await sharedPage.getByPlaceholder('Username').fill(adminUsername)
+    await sharedPage.getByPlaceholder('Password', { exact: true }).fill(adminPassword)
+    await sharedPage.locator('form').getByRole('button', { name: 'Login', exact: true }).click()
+    await expect(sharedPage.getByText(`Welcome, ${adminUsername}!`)).toBeVisible()
+  })
+
+  test('should navigate to admin page and create a new project', async () => {
+    await sharedPage.getByRole('link', { name: 'Admin', exact: true }).click()
+    await sharedPage.getByRole('button', { name: 'Add new project' }).click()
+    await sharedPage.locator('input[name="title"]').fill(uniqueTitle)
+    await sharedPage.locator('input[name="description"]').fill(description)
+    await sharedPage.locator('input[name="technologies"]').fill(technologies)
+    await sharedPage.locator('input[name="githubUrl"]').fill(githubUrl)
+    await sharedPage.getByRole('button', { name: 'Add project' }).click()
+  })
+
+  test('should display the created project on public projects page', async () => {
+    await sharedPage.getByRole('link', { name: 'Projects', exact: true }).click()
+    await expect(sharedPage.locator('ul')).toContainText(uniqueTitle)
+  })
+
+  test('should toggle details for the created project successfully', async () => {
+    const projectItem = sharedPage.locator('li').filter({ hasText: uniqueTitle })
+    await projectItem.getByRole('button', { name: 'Show info' }).click()
+    await expect(sharedPage.getByText(`Description: ${description}`)).toBeVisible()
+  })
+})

@@ -1,5 +1,7 @@
 # Root
 /node_modules
+/playwright-report
+/test-results
 
 # Backend
 /backend/node_modules
