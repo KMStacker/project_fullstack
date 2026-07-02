@@ -1,0 +1,100 @@
+import { beforeEach, describe, test, expect, afterAll, beforeAll } from '@jest/globals'
+import supertest from 'supertest'
+import jwt from 'jsonwebtoken'
+import app from '../app'
+import Comment from '../models/comment'
+import User from '../models/user'
+import { sequelize, connectDb } from '../utils/db'
+import * as config from '../utils/config'
+
+const api = supertest(app)
+
+let userToken: string
+let testUser: any
+
+beforeAll(async () => {
+  await connectDb()
+})
+
+beforeEach(async () => {
+  await Comment.destroy({ where: {} })
+  await User.destroy({ where: {} })
+
+  testUser = await User.create({
+    username: 'testuser',
+    passwordHash: '12345',
+    role: 'USER'
+  })
+
+  userToken = jwt.sign(
+    { username: testUser.username, id: testUser.id, role: testUser.role },
+    config.SECRET || ''
+  )
+})
+
+describe('comments api', () => {
+  test('get all comments returns comments with user attributes', async () => {
+    await Comment.create({
+      content: 'Hello world',
+      userId: testUser.id
+    })
+
+    const response = await api
+      .get('/api/comments')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveLength(1)
+    expect(response.body[0].content).toBe('Hello world')
+    expect(response.body[0].user).toBeDefined()
+    expect(response.body[0].user.username).toBe('testuser')
+  })
+
+  test('create comment succeeds with valid token', async () => {
+    const newComment = {
+      content: 'Nice portfolio!'
+    }
+
+    const response = await api
+      .post('/api/comments')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(newComment)
+      .expect(201)
+
+    expect(response.body.content).toBe('Nice portfolio!')
+    expect(response.body.user.username).toBe('testuser')
+
+    const commentsAtEnd = await Comment.findAll()
+    expect(commentsAtEnd).toHaveLength(1)
+  })
+
+  test('create comment fails without token', async () => {
+    const newComment = {
+      content: 'Unauthenticated comment'
+    }
+
+    await api
+      .post('/api/comments')
+      .send(newComment)
+      .expect(401)
+
+    const commentsAtEnd = await Comment.findAll()
+    expect(commentsAtEnd).toHaveLength(0)
+  })
+
+  test('create comment fails with empty content', async () => {
+    const newComment = {
+      content: '   '
+    }
+
+    await api
+      .post('/api/comments')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(newComment)
+      .expect(400)
+  })
+})
+
+afterAll(async () => {
+  await sequelize.close()
+})
