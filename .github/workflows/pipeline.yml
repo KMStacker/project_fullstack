@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Trigger deployment
-        run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
   tag_release:
     needs: [deploy]
