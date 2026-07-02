@@ -1,5 +1,5 @@
 import express from 'express'
-//import { connectDb } from './utils/db'
+import path from 'path'
 import projectsRouter from './controllers/projects'
 import skillsRouter from './controllers/skills'
 import tokenExtractor from './middleware/tokenExtractor'
@@ -22,6 +22,15 @@ app.use('/api/skills', skillsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/comments', commentsRouter)
+
+app.use(express.static(path.join(__dirname, '../../frontend/dist')))
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    return next()
+  }
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'))
+})
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
