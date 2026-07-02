@@ -22,13 +22,14 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: test_db
+          POSTGRES_USER: mycv_user
+          POSTGRES_PASSWORD: mycv_password
+          POSTGRES_DB: mycv_test_db
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 54321:5432
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U mycv_user -h 127.0.0.1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
