@@ -1,0 +1,98 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-22.04
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TEST_DATABASE_URL: postgres://mycv_user:mycv_password@localhost:5432/mycv_test_db
+      PORT: 3001
+      ADMIN_PSW: ${{ secrets.ADMIN_PSW }}
+      SECRET: ${{ secrets.SECRET }}
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies (Root)
+        run: npm install
+
+      - name: Install dependencies (Backend)
+        run: npm install
+        working-directory: ./backend
+
+      - name: Install dependencies (Frontend)
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Check backend style
+        run: npm run lint
+        working-directory: ./backend
+
+      - name: Check frontend style
+        run: npm run lint
+        working-directory: ./frontend
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./backend
+
+      - name: Run frontend tests
+        run: npm test
+        working-directory: ./frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+  deploy:
+    needs: [build_and_test]
+    if: ${{ github.event_name == 'push' && github.event.head_commit && !contains(github.event.head_commit.message, '#skip') }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger deployment
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+  tag_release:
+    needs: [deploy]
+    if: ${{ github.event_name == 'push' && github.event.head_commit && !contains(github.event.head_commit.message, '#skip') }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
