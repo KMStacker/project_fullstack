@@ -11,7 +11,13 @@ const mockSkills = [
     id: 1,
     name: 'GoLang',
     level: 'Expert',
-    usedOn: 'Backend API'
+    usedOn: 'Backend'
+  },
+  {
+    id: 2,
+    name: 'React',
+    level: 'Intermediate',
+    usedOn: 'Frontend'
   }
 ]
 
@@ -23,28 +29,32 @@ beforeEach(() => {
 describe('SkillsPage', () => {
   test('renders page title and fetches skills successfully', async () => {
     render(<SkillsPage />)
-    expect(screen.getByText('This is the skills page!')).toBeInTheDocument()
     const skillName = await screen.findByText('GoLang')
     expect(skillName).toBeInTheDocument()
+    expect(screen.getByText('Skills Showcase')).toBeInTheDocument()
   })
 
-  test('does not display skill details by default', async () => {
+  test('displays first skill details by default', async () => {
     render(<SkillsPage />)
     await screen.findByText('GoLang')
-    expect(screen.queryByText('Level: Expert')).not.toBeInTheDocument()
+    expect(screen.getByText('Expert')).toBeInTheDocument()
+    expect(screen.getByText('Backend')).toBeInTheDocument()
   })
 
-  test('toggles skill details when clicking the buttons', async () => {
+  test('navigates between skills when clicking the next and previous buttons', async () => {
     render(<SkillsPage />)
     await screen.findByText('GoLang')
 
-    const showButton = screen.getByRole('button', { name: /show info/i })
-    await userEvent.click(showButton)
-    expect(screen.getByText('Level: Expert')).toBeInTheDocument()
-    expect(screen.getByText('UsedOn: Backend API')).toBeInTheDocument()
+    const nextButton = screen.getByRole('button', { name: '→' })
+    await userEvent.click(nextButton)
 
-    const hideButton = screen.getByRole('button', { name: /hide info/i })
-    await userEvent.click(hideButton)
-    expect(screen.queryByText('Level: Expert')).not.toBeInTheDocument()
+    expect(await screen.findByText('React')).toBeInTheDocument()
+    expect(screen.getByText('Intermediate')).toBeInTheDocument()
+    expect(screen.getByText('Frontend')).toBeInTheDocument()
+
+    const prevButton = screen.getByRole('button', { name: '←' })
+    await userEvent.click(prevButton)
+
+    expect(await screen.findByText('GoLang')).toBeInTheDocument()
   })
 })

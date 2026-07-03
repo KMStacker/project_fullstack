@@ -9,7 +9,7 @@ test.describe('Admin Dashboard Flow', () => {
   throw new Error('ADMIN_PSW environment variable is missing')
   }
   const adminPassword: string = process.env.ADMIN_PSW
-  const uniqueTitle = `Project_${Date.now()}`
+  const title = `Project_${Date.now()}`
   const description = `Description_${Date.now()}`
   const technologies = `Technologies_${Date.now()}`
   const githubUrl = `Url_${Date.now()}`
@@ -34,7 +34,7 @@ test.describe('Admin Dashboard Flow', () => {
   test('should navigate to admin page and create a new project', async () => {
     await sharedPage.getByRole('link', { name: 'Admin', exact: true }).click()
     await sharedPage.getByRole('button', { name: 'Add new project' }).click()
-    await sharedPage.locator('input[name="title"]').fill(uniqueTitle)
+    await sharedPage.locator('input[name="title"]').fill(title)
     await sharedPage.locator('input[name="description"]').fill(description)
     await sharedPage.locator('input[name="technologies"]').fill(technologies)
     await sharedPage.locator('input[name="githubUrl"]').fill(githubUrl)
@@ -43,12 +43,12 @@ test.describe('Admin Dashboard Flow', () => {
 
   test('should display the created project on public projects page', async () => {
     await sharedPage.getByRole('link', { name: 'Projects', exact: true }).click()
-    await expect(sharedPage.locator('ul')).toContainText(uniqueTitle)
+    await expect(sharedPage.getByRole('heading', { name: title })).toBeVisible()
   })
 
-  test('should toggle details for the created project successfully', async () => {
-    const projectItem = sharedPage.locator('li').filter({ hasText: uniqueTitle })
-    await projectItem.getByRole('button', { name: 'Show info' }).click()
-    await expect(sharedPage.getByText(`Description: ${description}`)).toBeVisible()
+  test('should automatically display project details in the showcase card', async () => {
+    await expect(sharedPage.getByText(description)).toBeVisible()
+    await expect(sharedPage.getByText(technologies)).toBeVisible()
+    await expect(sharedPage.getByRole('link', { name: 'View in GitHub' })).toBeVisible()
   })
 })
