@@ -9,10 +9,17 @@ vi.mock('axios')
 const mockProjects = [
   {
     id: 1,
-    title: 'E2E App',
-    description: 'Test description',
+    title: 'First App',
+    description: 'First description',
     technologies: 'Node, React',
     githubUrl: 'https://github.com/test'
+  },
+  {
+    id: 2,
+    title: 'Second App',
+    description: 'Second description',
+    technologies: 'Go, TypeScript',
+    githubUrl: 'https://github.com/test2'
   }
 ]
 
@@ -24,28 +31,31 @@ beforeEach(() => {
 describe('ProjectsPage', () => {
   test('renders page title and fetches projects successfully', async () => {
     render(<ProjectsPage />)
-    expect(screen.getByText('This is the projects page!')).toBeInTheDocument()
+    expect(screen.getByText('Projects Showcase')).toBeInTheDocument()
     const projectTitle = await screen.findByText('E2E App')
     expect(projectTitle).toBeInTheDocument()
   })
 
-  test('does not display project details by default', async () => {
+  test('displays first project details by default', async () => {
     render(<ProjectsPage />)
-    await screen.findByText('E2E App')
-    expect(screen.queryByText('Description: Test description')).not.toBeInTheDocument()
+    await screen.findByText('First App')
+    expect(screen.getByText('First description')).toBeInTheDocument()
+    expect(screen.getByText('Node, React')).toBeInTheDocument()
   })
 
-  test('toggles project details when clicking the buttons', async () => {
+  test('navigates between projects when clicking the next and previous buttons', async () => {
     render(<ProjectsPage />)
-    await screen.findByText('E2E App')
+    await screen.findByText('First App')
 
-    const showButton = screen.getByRole('button', { name: /show info/i })
-    await userEvent.click(showButton)
-    expect(screen.getByText('Description: Test description')).toBeInTheDocument()
-    expect(screen.getByText('Technologies: Node, React')).toBeInTheDocument()
+    const nextButton = screen.getByRole('button', { name: '→' })
+    await userEvent.click(nextButton)
 
-    const hideButton = screen.getByRole('button', { name: /hide info/i })
-    await userEvent.click(hideButton)
-    expect(screen.queryByText('Description: Test description')).not.toBeInTheDocument()
+    expect(await screen.findByText('Second App')).toBeInTheDocument()
+    expect(screen.getByText('Second description')).toBeInTheDocument()
+
+    const prevButton = screen.getByRole('button', { name: '←' })
+    await userEvent.click(prevButton)
+
+    expect(await screen.findByText('First App')).toBeInTheDocument()
   })
 })
