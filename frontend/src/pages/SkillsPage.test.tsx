@@ -29,9 +29,9 @@ beforeEach(() => {
 describe('SkillsPage', () => {
   test('renders page title and fetches skills successfully', async () => {
     render(<SkillsPage />)
-    expect(screen.getByText('Skills Showcase')).toBeInTheDocument()
     const skillName = await screen.findByText('GoLang')
     expect(skillName).toBeInTheDocument()
+    expect(screen.getByText('Skills Showcase')).toBeInTheDocument()
   })
 
   test('displays first skill details by default', async () => {

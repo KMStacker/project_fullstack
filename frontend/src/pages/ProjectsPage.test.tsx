@@ -31,9 +31,9 @@ beforeEach(() => {
 describe('ProjectsPage', () => {
   test('renders page title and fetches projects successfully', async () => {
     render(<ProjectsPage />)
-    expect(screen.getByText('Projects Showcase')).toBeInTheDocument()
-    const projectTitle = await screen.findByText('E2E App')
+    const projectTitle = await screen.findByText('First App')
     expect(projectTitle).toBeInTheDocument()
+    expect(screen.getByText('Projects Showcase')).toBeInTheDocument()
   })
 
   test('displays first project details by default', async () => {
