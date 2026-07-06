@@ -68,18 +68,20 @@ describe('comments api', () => {
     expect(commentsAtEnd).toHaveLength(1)
   })
 
-  test('create comment fails without token', async () => {
+  test('create comment succeeds without token as guest', async () => {
     const newComment = {
       content: 'Unauthenticated comment'
     }
 
-    await api
+    const response = await api
       .post('/api/comments')
       .send(newComment)
-      .expect(401)
+      .expect(201)
+
+    expect(response.body.guestName).toMatch(/^Guest_/)
 
     const commentsAtEnd = await Comment.findAll()
-    expect(commentsAtEnd).toHaveLength(0)
+    expect(commentsAtEnd).toHaveLength(1)
   })
 
   test('create comment fails with empty content', async () => {

@@ -328,3 +328,11 @@
   align-items: center;
   gap: 8px;
 }
+
+.info-box {
+  background: rgba(12, 7, 20, 0.2);
+  border: 1px solid rgba(252, 246, 186, 0.2);
+  padding: 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}

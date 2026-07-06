@@ -9,19 +9,25 @@ export interface Comment {
   user: {
     username: string
     role: string
-  }
+  } | null
+  isPublic: boolean
+  guestName: string | null
 }
 
-export const getAll = async (): Promise<Comment[]> => {
-  const response = await axios.get<Comment[]>(baseUrl)
+export const getAll = async (token: string | null = null): Promise<Comment[]> => {
+  const config = token ? {
+    headers: { Authorization: `Bearer ${token}` }
+  } : {}
+  const response = await axios.get<Comment[]>(baseUrl, config)
   return response.data
 }
 
-export const create = async (content: string, token: string): Promise<Comment> => {
-  const config = {
+export const create = async (content: string, isPublic: boolean, guestName: string, token: string | null): Promise<Comment> => {
+  const config = token ? {
     headers: { Authorization: `Bearer ${token}` }
-  }
-  const response = await axios.post<Comment>(baseUrl, { content }, config)
+  } : {}
+
+  const response = await axios.post<Comment>(baseUrl, { content, isPublic, guestName }, config)
   return response.data
 }
 

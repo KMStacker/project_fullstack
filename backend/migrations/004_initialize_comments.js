@@ -14,9 +14,18 @@ module.exports = {
       },
       user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: { model: 'users', key: 'id' },
         onDelete: 'CASCADE'
+      },
+      is_public: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      guest_name: {
+        type: DataTypes.TEXT,
+        allowNull: true
       },
       created_at: {
         type: DataTypes.DATE,

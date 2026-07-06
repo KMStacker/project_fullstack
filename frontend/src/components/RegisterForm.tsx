@@ -54,10 +54,10 @@ const RegisterForm = ({ handleLogin, onSuccess, onCancel }: RegisterFormProps): 
     <div className="feature-editor" style={{ padding: '10px' }}>
       <h2>Register New Account</h2>
       {showModal && (
-        <div style={{ padding: '10px', background: '#fff', border: '1px solid #ccc', marginBottom: '15px', borderRadius: '5px' }}>
+        <div className="info-box">
           <p>Registration successful! Do you want to log in also?</p>
-          <button className="button" onClick={() => void handleModalChoice(true)}>Yes</button>
-          <button className="button" onClick={() => void handleModalChoice(false)}>No</button>
+          <button type="button" className="button" onClick={() => void handleModalChoice(true)}>Yes</button>
+          <button type="button" className="button" onClick={() => void handleModalChoice(false)}>No</button>
         </div>
       )}
       <form onSubmit={handleRegister}>

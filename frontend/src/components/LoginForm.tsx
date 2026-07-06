@@ -3,9 +3,10 @@ import React, { useState, JSX } from 'react'
 interface LoginFormProps {
   handleLogin: (username: string, password: string) => Promise<void> | void
   onSuccess: () => void
+  onCancel?: () => void
 }
 
-const LoginForm = ({ handleLogin, onSuccess }: LoginFormProps): JSX.Element => {
+const LoginForm = ({ handleLogin, onSuccess, onCancel }: LoginFormProps): JSX.Element => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
@@ -41,6 +42,9 @@ const LoginForm = ({ handleLogin, onSuccess }: LoginFormProps): JSX.Element => {
         </div>
         <div className="inline-header-row">
           <button type="submit" className="button">Login</button>
+          {onCancel && (
+            <button type="button" className="button" onClick={onCancel}>Cancel</button>
+          )}
         </div>
       </form>
     </div>

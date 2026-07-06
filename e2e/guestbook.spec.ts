@@ -4,8 +4,8 @@ test.describe('Guestbook Flow', () => {
   test('should prompt for login if unauthenticated', async ({ page }) => {
     await page.goto('/guestbook')
 
-    await expect(page.getByText('Please log in to leave a comment.')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Register in to leave a comment' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sign up' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Leave comment as guest' })).toBeVisible()
   })
 
   test('should allow authenticated user to post a comment', async ({ page, request }) => {
