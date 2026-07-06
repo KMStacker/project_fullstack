@@ -1,0 +1,1 @@
+CREATE DATABASE mycv_test_db;
