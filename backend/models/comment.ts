@@ -5,7 +5,9 @@ import User from './user'
 export class Comment extends Model {
   declare id: number
   declare content: string
-  declare userId: number
+  declare userId: number | null
+  declare isPublic: boolean
+  declare guestName: string | null
   declare createdAt: Date
 }
 
@@ -21,8 +23,17 @@ Comment.init({
   },
   userId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: { model: 'users', key: 'id' }
+  },
+  isPublic: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
+  guestName: {
+    type: DataTypes.TEXT,
+    allowNull: true
   },
   createdAt: {
     type: DataTypes.DATE,

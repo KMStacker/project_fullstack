@@ -1,5 +1,6 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import { Op } from 'sequelize'
 import Comment from '../models/comment'
 import User from '../models/user'
 import * as config from '../utils/config'
@@ -7,13 +8,36 @@ import { CustomRequest } from '../middleware/tokenExtractor'
 
 const commentsRouter = express.Router()
 
-commentsRouter.get('/', async (_request: express.Request, response: express.Response) => {
+commentsRouter.get('/', async (request: CustomRequest, response: express.Response) => {
+  let whereClause = {}
+  const token = request.token
+
+  if (token) {
+    try {
+      const decodedToken = jwt.verify(token, config.SECRET || '') as jwt.JwtPayload
+      if (decodedToken.role !== 'ADMIN') {
+        whereClause = {
+          [Op.or]: [
+            { isPublic: true },
+            { userId: decodedToken.id }
+          ]
+        }
+      }
+    } catch (error) {
+      whereClause = { isPublic: true }
+    }
+  } else {
+    whereClause = { isPublic: true }
+  }
+
   const comments = await Comment.findAll({
+    where: whereClause,
     include: {
       model: User,
       as: 'user',
       attributes: ['username', 'role']
-    }
+    },
+    order: [['createdAt', 'DESC']]
   })
   response.json(comments)
 })
@@ -21,24 +45,37 @@ commentsRouter.get('/', async (_request: express.Request, response: express.Resp
 commentsRouter.post('/', async (request: CustomRequest, response: express.Response, next: express.NextFunction) => {
   try {
     const token = request.token
-    if (!token) {
-      return response.status(401).json({ error: 'token missing' })
+    let userId = null
+
+    if (token) {
+      try {
+        const decodedToken = jwt.verify(token, config.SECRET || '') as jwt.JwtPayload
+        if (decodedToken.id) {
+          userId = decodedToken.id
+        }
+      } catch (error) {
+        return response.status(401).json({ error: 'invalid token' })
+      }
     }
 
-    const decodedToken = jwt.verify(token, config.SECRET || '') as jwt.JwtPayload
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'invalid token' })
-    }
+    const { content, isPublic, guestName } = request.body
 
-    const { content } = request.body
     if (!content || typeof content !== 'string' || content.trim() === '') {
       return response.status(400).json({ error: 'content is required' })
     }
 
-    const savedComment = await Comment.create({
+   const savedComment = await Comment.create({
       content: content.trim(),
-      userId: decodedToken.id
+      userId: userId,
+      isPublic: isPublic !== undefined ? isPublic : true,
+      guestName: ''
     })
+
+    if (!userId) {
+      const suffix = guestName ? guestName.trim() : ''
+      savedComment.guestName = `Guest_${savedComment.id}${suffix ? ' (' + suffix + ')' : ''}`
+      await savedComment.save()
+    }
 
     const completeComment = await Comment.findByPk(savedComment.id, {
       include: {

@@ -11,7 +11,9 @@ usersRouter.post('/', async (request: express.Request, response: express.Respons
     if (!username || typeof username !== 'string' || username.trim().length < 3) {
       return response.status(400).json({ error: 'username must be at least 3 characters long' })
     }
-
+    if (username.trim().toLowerCase().startsWith('guest_')) {
+      return response.status(400).json({ error: 'Usernames starting with guest_ are reserved' })
+    }
     if (!password || typeof password !== 'string' || password.length < 5) {
       return response.status(400).json({ error: 'password must be at least 5 characters long' })
     }
