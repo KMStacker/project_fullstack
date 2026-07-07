@@ -6,6 +6,7 @@ export class User extends Model {
   declare username: string
   declare passwordHash: string
   declare role: string
+  declare commentingDisabled: boolean
 }
 
 User.init({
@@ -27,6 +28,11 @@ User.init({
     type: DataTypes.TEXT,
     allowNull: false,
     defaultValue: 'USER'
+  },
+  commentingDisabled: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
   sequelize,

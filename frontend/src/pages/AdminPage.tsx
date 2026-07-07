@@ -18,6 +18,14 @@ export interface Skill {
   technologies?: string
 }
 
+export interface UserWithStats {
+  id: number
+  username: string
+  role: string
+  commentingDisabled: boolean
+  commentCount: number
+}
+
 interface User {
   username: string
   token: string
@@ -29,6 +37,8 @@ interface AdminPageProps {
 }
 
 const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
+  const [adminUsers, setAdminUsers] = useState<UserWithStats[]>([])
+  
   const [projects, setProjects] = useState<Project[]>([])
   const [newProject, setNewProject] = useState({
     title: '',
@@ -52,6 +62,11 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
 
   useEffect(() => {
     axios
+      .get<Skill[]>('/api/skills')
+      .then(response => {
+        setSkills(response.data)
+      })
+    axios
       .get<Project[]>('/api/projects')
       .then(response => {
         setProjects(response.data)
@@ -59,12 +74,16 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    axios
-      .get<Skill[]>('/api/skills')
-      .then(response => {
-        setSkills(response.data)
-      })
-  }, [])
+    if (user && user.role === 'ADMIN') {
+      const config = { headers: { Authorization: `Bearer ${user.token}` } }
+      axios
+        .get<UserWithStats[]>('/api/users', config)
+        .then(response => {
+          setAdminUsers(response.data)
+        })
+        .catch(err => console.error('Error fetching users:', err))
+    }
+  }, [user])
 
   const toggleInfo = (id: number, visibleItems: number[], setVisibleItems: React.Dispatch<React.SetStateAction<number[]>>): void => {
     if (visibleItems.includes(id)) {
@@ -214,6 +233,16 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     }
   }
 
+  const handleToggleCommentStatus = async (id: number): Promise<void> => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${user?.token}` } }
+      const response = await axios.put<UserWithStats>(`/api/users/${id}/comments-status`, {}, config)
+      setAdminUsers(adminUsers.map(u => u.id === id ? response.data : u))
+    } catch (error) {
+      console.error('Error toggling comment status:', error)
+    }
+  }
+
   return (
     <>
     <div className="content-window">
@@ -344,6 +373,29 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
         </li>
       ))}
     </div>
+    
+    <hr></hr>
+    
+    <div className="content-window">
+      <h4 style={{ marginBottom: '5px'}}>Users Management:</h4>
+      {adminUsers.map(u => (
+        <li key={u.id} style={{ marginBottom: '10px' }}>
+          <strong>{u.username}</strong> ({u.role}) - Comments: {u.commentCount} &nbsp;
+          Status: {u.commentingDisabled ? <span style={{color: 'red', fontWeight: 'bold'}}>Banned</span> : <span style={{color: 'green'}}>Active</span>}
+          
+          {u.role !== 'ADMIN' && (
+            <button 
+              className="button" 
+              style={{ marginLeft: '10px' }}
+              onClick={() => void handleToggleCommentStatus(u.id)}
+            >
+              {u.commentingDisabled ? 'Unban User' : 'Ban User'}
+            </button>
+          )}
+        </li>
+      ))}
+    </div>
+    
     </div>
     </>
   )

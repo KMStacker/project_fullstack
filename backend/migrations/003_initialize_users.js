@@ -21,6 +21,11 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: 'USER'
+      },
+      commenting_disabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     })
   },

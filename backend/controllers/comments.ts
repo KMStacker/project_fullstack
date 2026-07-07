@@ -53,6 +53,11 @@ commentsRouter.post('/', async (request: CustomRequest, response: express.Respon
         const decodedToken = jwt.verify(token, config.SECRET || '') as jwt.JwtPayload
         if (decodedToken.id) {
           userId = decodedToken.id
+          
+          const checkUser = await User.findByPk(userId)
+          if (checkUser && checkUser.commentingDisabled) {
+            return response.status(403).json({ error: 'Your commenting privileges have been disabled by an admin.' })
+          }
         }
       } catch (error) {
         return response.status(401).json({ error: 'invalid token' })
