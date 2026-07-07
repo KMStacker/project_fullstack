@@ -309,12 +309,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
       )}
 
       <h4 style={{ marginBottom: '5px'}}>Skills:</h4>
-      {skills.map(skill => (
+      {skills.map((skill, index) => (
         <li key={skill.id}>
           {skill.name} &nbsp;
+          <button className="button" onClick={() => void handleReorderSkills(index, 'UP')} disabled={index === 0}>↑</button>
+          <button className="button" onClick={() => void handleReorderSkills(index, 'DOWN')} disabled={index === skills.length - 1}>↓</button>
           <button className="button" onClick={() => toggleInfo(skill.id, visibleSkills, setVisibleSkills)}>{visibleSkills.includes(skill.id) ? 'Hide info' : 'Show info'}</button>
           <button className="button" onClick={() => { setEditingSkill(editingSkill && editingSkill.id === skill.id ? null : skill) }}>{editingSkill && editingSkill.id === skill.id ? 'Stop editing' : 'Edit'}</button>
-          <button className="button" onClick={() => handleDeleteSkill(skill.id)}>Delete</button>
+          <button className="button" onClick={() => void handleDeleteSkill(skill.id)}>Delete</button>
           
           {visibleSkills.includes(skill.id) && (
             <ul>
