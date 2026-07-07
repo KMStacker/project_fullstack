@@ -54,7 +54,7 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
         <h1>Guestbook</h1>
         
         <p style={{ fontStyle: 'italic', marginBottom: '15px' }}>
-          Feel free to leave a public comment or secret one only for the admin to see it!
+          Feel free to leave a public comment, or a private message for the admin's eyes only!
         </p>
         <br/>
       </div>
@@ -65,11 +65,12 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
             <div style={{ display: 'flex', gap: '10px' }}>
               <input
                 type="text"
+                className="theme-input"
                 value={newComment}
                 onChange={({ target }) => setNewComment(target.value)}
                 placeholder="Write a comment..."
                 required
-                style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc', width: '300px' }}
+                style={{ width: '300px' }}
               />
               <button type="submit" className="button" style={{ margin: 0 }}>Post</button>
             </div>
@@ -123,21 +124,23 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
                     <p>Guest_xxx + </p>
                     <input
                       type="text"
+                      className="theme-input"
                       value={guestName}
                       onChange={({ target }) => setGuestName(target.value)}
                       placeholder="Optional text..."
-                      style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc', width: '180px' }}
+                      style={{ width: '180px' }}
                     />
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input
                     type="text"
+                    className="theme-input"
                     value={newComment}
                     onChange={({ target }) => setNewComment(target.value)}
                     placeholder="Write a comment..."
                     required
-                    style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc', width: '300px' }}
+                    style={{ width: '300px' }}
                   />
                   <button type="submit" className="button" style={{ margin: 0 }}>Post</button>
                 </div>

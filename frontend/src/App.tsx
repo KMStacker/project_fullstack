@@ -11,6 +11,8 @@ import loginService from './services/login'
 import RegisterForm from './components/RegisterForm'
 import SparkleOverlay from './components/SparkleOverlay'
 
+export type AppTheme = 'default' | 'golden' | 'rainbow'
+
 interface User {
   username: string
   token: string
@@ -21,6 +23,7 @@ const App = (): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
   const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false)
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+  const [theme, setTheme] = useState<AppTheme>('default')
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -29,7 +32,17 @@ const App = (): JSX.Element => {
       setUser(userObj)
       loginService.setToken(userObj.token)
     }
+
+    const savedTheme = window.localStorage.getItem('appTheme') as AppTheme
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
   }, [])
+
+  useEffect(() => {
+    document.body.className = theme === 'default' ? '' : `theme-${theme}`
+    window.localStorage.setItem('appTheme', theme)
+  }, [theme])
 
   const handleLogin = async (username: string, password: string): Promise<void> => {
     try {
@@ -77,7 +90,7 @@ const App = (): JSX.Element => {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage user={user} theme={theme} setTheme={setTheme} />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/skills" element={<SkillsPage />} />
         <Route path="/admin" element={<AdminPage user={user} />} />
