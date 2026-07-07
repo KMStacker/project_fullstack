@@ -4,12 +4,13 @@
   "main": "build/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
-    "start": "cross-env NODE_ENV=production node build/createAdminAccount.js && cross-env NODE_ENV=production node build/index.js",
+    "start": "cross-env NODE_ENV=production node build/createAdminAccount.js && cross-env NODE_ENV=production node build/seedDatabase.js && cross-env NODE_ENV=production node build/index.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only index.ts",
-    "start:test": "cross-env NODE_ENV=test ts-node createAdminAccount.ts && cross-env NODE_ENV=test ts-node-dev --transpile-only index.ts",
+    "start:test": "cross-env NODE_ENV=test ts-node createAdminAccount.ts && cross-env NODE_ENV=test ts-node seedDatabase.ts && cross-env NODE_ENV=test ts-node-dev --transpile-only index.ts",
     "lint": "eslint .",
     "build": "tsc",
-    "create-admin": "cross-env NODE_ENV=development ts-node createAdminAccount.ts"
+    "create-admin": "cross-env NODE_ENV=development ts-node createAdminAccount.ts",
+    "seed-db": "cross-env NODE_ENV=development ts-node seedDatabase.ts"
   },
   "keywords": [],
   "author": "",
