@@ -34,9 +34,9 @@ const SkillsPage = (): JSX.Element => {
 
   if (skills.length === 0) {
     return (
-      <div className="content-window">
-        <h1>This is the skills page!</h1>
-        <p>No skills found.</p>
+      <div className="content-window showcase-container">
+        <h1 className="showcase-header">Skills Showcase</h1>
+        <p style={{ textAlign: 'center', marginTop: '20px' }}>No skills found.</p>
       </div>
     )
   }

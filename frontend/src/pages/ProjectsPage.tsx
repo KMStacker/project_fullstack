@@ -35,9 +35,9 @@ const ProjectsPage = (): JSX.Element => {
 
   if (projects.length === 0) {
     return (
-      <div className="content-window">
-        <h1>This is the projects page!</h1>
-        <p>No projects found.</p>
+      <div className="content-window showcase-container">
+        <h1 className="showcase-header">Projects Showcase</h1>
+        <p style={{ textAlign: 'center', marginTop: '20px' }}>No projects found.</p>
       </div>
     )
   }

@@ -8,13 +8,13 @@ test.describe('App Navigation', () => {
 
   test('should navigate to projects page successfully', async ({ page }) => {
     await page.goto('/')
-    await page.click('text=Projects')
+    await page.getByRole('link', { name: 'Projects', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Projects Showcase' })).toBeVisible()
   })
 
   test('should navigate to skills page successfully', async ({ page }) => {
     await page.goto('/')
-    await page.click('text=Skills')
+    await page.getByRole('link', { name: 'Skills', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Skills Showcase' })).toBeVisible()
   })
 
