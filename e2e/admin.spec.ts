@@ -43,7 +43,15 @@ test.describe('Admin Dashboard Flow', () => {
 
   test('should display the created project on public projects page', async () => {
     await sharedPage.getByRole('link', { name: 'Projects', exact: true }).click()
-    await expect(sharedPage.getByRole('heading', { name: title })).toBeVisible()
+    const projectHeading = sharedPage.getByRole('heading', { name: title })
+    for (let i = 0; i < 10; i++) {
+      if (await projectHeading.isVisible()) {
+        break
+      }
+      await sharedPage.getByRole('button', { name: '→' }).click()
+    }
+
+    await expect(projectHeading).toBeVisible()
   })
 
   test('should automatically display project details in the showcase card', async () => {

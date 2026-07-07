@@ -185,7 +185,7 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     <div>
       <div className="content-window">
         <div>
-          <button onClick={() => setAddingProject(!addingProject)}>
+          <button className="button" onClick={() => setAddingProject(!addingProject)}>
             {addingProject ? 'Stop adding new project' : 'Add new project'}
           </button>
         </div>
@@ -250,7 +250,7 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
       
     <div className="content-window">
       <div>
-        <button onClick={() => setAddingSkill(!addingSkill)}>
+        <button className="button" onClick={() => setAddingSkill(!addingSkill)}>
           {addingSkill ? 'Stop adding new skill' : 'Add new skill'}
         </button>
       </div>

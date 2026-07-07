@@ -1,64 +1,16 @@
-
-
-/* navigation buttons */
-/*
-.button {
-  color: rgb(57, 148, 148);
-  background-color: rgb(238, 227, 214);
-  text-align: center;
-  padding: 4px 9px;
-  border-radius: 5px;
-  border-color: white;
-  border: none;
-  margin: 5px;
-  text-decoration: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  transition: all 0.2s ease;
-  cursor: pointer;
-  display: inline-block;
-}
-
-.button:hover {
-  color: rgb(238, 227, 214);
-  background-color: rgb(57, 148, 148);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.button:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.content-window {
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 5px 10px;
-  margin: 10px;
-  border-radius: 15px;
-  box-shadow: 0 0 5px 5px rgba(255, 255, 255, 0.5);
-  display: inline-block;
-}
-
-.content-window > :first-child {
-  margin-top: 0;
-}
-
-.content-window > :last-child {
-  margin-bottom: 0;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-}
+/* ==========================================================================
+   1. GLOBAL LAYOUT & CONTAINERS
+   ========================================================================== */
 
 .nav-bar {
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 1px 10px;
-  margin: 10px;
-  border-radius: 15px;
-  box-shadow: 0 0 5px 5px rgba(255, 255, 255, 0.5);
+  background: var(--box-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  margin: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--box-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 10px var(--box-shadow-glow);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -72,102 +24,50 @@
   margin-bottom: 0;
 }
 
-.login-form  {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.content-window {
+  background: var(--box-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px;
+  margin: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--box-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px var(--box-shadow-glow);
+  display: inline-block;
 }
 
-.separate-boxes {
-  display: flex;
-  gap: 5px;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-}
-
-.modal {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: absolute;
-  top: 75px;
-  right: 25px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  scrollbar-width: medium;
-  scrollbar-color: #c1c1c1 transparent;
-}
-
-.feature-editor {
-  --fe-border: #e1e4e8;
-  --fe-border-strong: #d1d5da;
-  --fe-text: #24292e;
-  --fe-muted: #444;
-  --fe-bg-subtle: #f6f8fa;
-  --fe-bg-input: #fafbfc;
-  --fe-brand: #0366d6;
-  --fe-brand-hover-bg: #f1f8ff;
-  background-color: #ffffff;
-  max-width: 1000px;
-  margin: 0 auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-.feature-editor h2 {
+.content-window > :first-child {
   margin-top: 0;
-  margin-bottom: 24px;
-  font-size: 1.25rem;
-  color: var(--fe-text);
-  border-bottom: 1px solid #eaecef;
-  padding-bottom: 12px;
 }
 
-.editor-section {
-  margin-bottom: 24px;
+.content-window > :last-child {
+  margin-bottom: 0;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+.info-box {
+  background: var(--box-bg);
+  border: 1px solid var(--box-border);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  font-weight: 550;
 }
 
-.section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--fe-text);
-}
 
-.inline-header-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-*/
+/* ==========================================================================
+   2. BUTTONS & INTERACTIVE ELEMENTS
+   ========================================================================== */
 
 .button {
-  color: #1a1610;
-  background-image: linear-gradient(to right, #e1af43 0%, #f7f4d2 25%, #f6f5f3 48%, #f7f4d2 75%, #e1af43 100%);
+  color: var(--btn-text);
+  background-image: var(--btn-bg);
   background-size: 300% auto;
   background-position: left center;
   text-align: center;
   padding: 6px 14px;
   border-radius: 6px;
-  border: 1px solid #aa771c;
+  border: 1px solid var(--btn-border);
   margin: 5px;
   text-decoration: none;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -180,9 +80,9 @@
 
 .button:hover {
   background-position: right center;
-  color: #0a0908;
+  color: var(--btn-text-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(218, 165, 32, 0.3);
+  box-shadow: 0 6px 12px var(--btn-hover-shadow);
 }
 
 .button:active {
@@ -190,25 +90,22 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.content-window {
-  background: rgba(26, 22, 16, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 20px;
-  margin: 15px;
-  border-radius: 12px;
-  border: 1px solid rgba(252, 246, 186, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(170, 119, 28, 0.1);
-  display: inline-block;
+.theme-selector-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.content-window > :first-child {
-  margin-top: 0;
+.active-theme-btn {
+  font-weight: bold;
+  border-color: var(--text-highlight);
+  box-shadow: 0 0 8px var(--box-shadow-glow);
 }
 
-.content-window > :last-child {
-  margin-bottom: 0;
-}
+
+/* ==========================================================================
+   3. FORMS & INPUTS
+   ========================================================================== */
 
 .form-grid {
   display: grid;
@@ -217,52 +114,36 @@
   gap: 10px;
 }
 
-.nav-bar {
-  background: rgba(26, 22, 16, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 10px 20px;
-  margin: 15px;
-  border-radius: 12px;
-  border: 1px solid rgba(252, 246, 186, 0.25);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-bar > :first-child {
-  margin-top: 0;
-}
-
-.nav-bar > :last-child {
-  margin-bottom: 0;
-}
-
 .login-form {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 550;
 }
 
-.login-form input, .feature-editor input {
-  background: rgba(10, 9, 8, 0.6);
-  border: 1px solid rgba(191, 149, 63, 0.4);
+.login-form input, .feature-editor input, .theme-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 4px;
-  color: #f7f3e3;
+  color: #f1f5f9;
   padding: 6px;
 }
 
-.login-form input:focus, .feature-editor input:focus {
+.login-form input:focus, .feature-editor input:focus, .theme-input:focus {
   outline: none;
-  border-color: #fcf6ba;
-  box-shadow: 0 0 5px rgba(252, 246, 186, 0.5);
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 5px var(--box-shadow-glow);
 }
 
 .separate-boxes {
   display: flex;
   gap: 5px;
 }
+
+
+/* ==========================================================================
+   4. MODALS & OVERLAYS
+   ========================================================================== */
 
 .modal-overlay {
   position: fixed;
@@ -276,8 +157,8 @@
 }
 
 .modal {
-  background: #1a1610;
-  border: 1px solid #bf953f;
+  background: var(--modal-bg);
+  border: 1px solid var(--text-highlight);
   padding: 2rem;
   border-radius: 12px;
   max-height: 90vh;
@@ -290,6 +171,96 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
+
+/* ==========================================================================
+   5. PROJECTS & SKILLS SHOWCASE
+   ========================================================================== */
+
+.showcase-container {
+  width: 100%;
+  max-width: 650px;
+  display: block;
+  margin: 20px auto;
+  padding: 30px;
+}
+
+.showcase-header {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--text-main);
+}
+
+.showcase-nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 250px;
+}
+
+.showcase-card {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.showcase-title {
+  color: var(--text-highlight);
+  font-size: 1.6rem;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.showcase-description {
+  color: #f1f5f9;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.showcase-tech {
+  font-size: 0.95rem;
+  color: #f1f5f9;
+  margin-top: 3rem;
+  margin-bottom: 5px;
+}
+
+.showcase-tech-label {
+  color: var(--text-highlight);
+}
+
+@keyframes cardColorShift {
+  0% {
+    background-position: 85%;
+    border-color: var(--text-highlight);
+    box-shadow: 0 0 15px var(--box-shadow-glow);
+  }
+  50% {
+    border-color: var(--btn-border);
+  }
+  100% {
+    background-position: 15%;
+    border-color: var(--box-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.animated-slide-card {
+  background: var(--card-gradient);
+  background-size: 300% auto;
+  animation: cardColorShift 0.6s ease-out forwards;
+}
+
+
+/* ==========================================================================
+   6. ADMIN PANEL & FEATURE EDITOR
+   ========================================================================== */
+
 .feature-editor {
   background-color: transparent;
   max-width: 1000px;
@@ -300,8 +271,8 @@
   margin-top: 0;
   margin-bottom: 24px;
   font-size: 1.25rem;
-  color: #fcf6ba;
-  border-bottom: 1px solid rgba(191, 149, 63, 0.3);
+  color: var(--text-highlight);
+  border-bottom: 1px solid var(--box-border);
   padding-bottom: 12px;
 }
 
@@ -320,19 +291,11 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
-  color: #fcf6ba;
+  color: var(--text-highlight);
 }
 
 .inline-header-row {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.info-box {
-  background: rgba(12, 7, 20, 0.2);
-  border: 1px solid rgba(252, 246, 186, 0.2);
-  padding: 10px;
-  border-radius: 15px;
-  margin-bottom: 10px;
 }

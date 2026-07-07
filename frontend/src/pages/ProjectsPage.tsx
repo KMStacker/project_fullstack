@@ -45,43 +45,20 @@ const ProjectsPage = (): JSX.Element => {
   const currentProject = projects[currentIndex]
 
   return (
-    <div className="content-window" style={{ width: '100%', maxWidth: '650px', display: 'block', margin: '20px auto', padding: '30px' }}>
-      <style>{`
-        @keyframes cardColorShift {
-          0% {
-            background-position: 85%;
-            border-color: #fcf6ba;
-            box-shadow: 0 0 15px rgba(252, 246, 186, 0.4);
-          }
-          50% {
-            border-color: #3a506b;
-          }
-          100% {
-            background-position: 15%;
-            border-color: rgba(252, 246, 186, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-          }
-        }
-        .animated-slide-card {
-          background: linear-gradient(120deg, rgba(20, 19, 94, 0.9) 0%, rgba(49, 71, 113, 0.9) 30%, rgba(20, 19, 94, 0.9) 50%, rgba(49, 71, 113, 0.9) 70%, rgba(20, 19, 94, 0.9) 100%);
-          background-size: 300% auto;
-          animation: cardColorShift 0.6s ease-out forwards;
-        }
-      `}</style>
-
-      <h1 style={{ textAlign: 'center', marginBottom: '25px', color: '#fcf6ba' }}>Projects Showcase</h1>
+    <div className="content-window showcase-container">
+      <h1 className="showcase-header">Projects Showcase</h1>
       
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px', minHeight: '250px' }}>
+      <div className="showcase-nav-wrapper">
         <button className="button" onClick={handlePrevious} style={{ padding: '12px 16px', fontSize: '1.2rem' }}>
           &larr;
         </button>
         
-        <div key={currentIndex} className="animated-slide-card" style={{ flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '220px', padding: '20px', borderRadius: '8px', border: '1px solid transparent' }}>
+        <div key={currentProject.id} className="animated-slide-card showcase-card">
           <div>
-            <h3 style={{ color: '#fcf6ba', fontSize: '1.6rem', marginTop: 0, marginBottom: '15px' }}>{currentProject.title}</h3>
-            <p style={{ color: '#f1f5f9', lineHeight: '1.6', marginBottom: '2rem' }}>{currentProject.description}</p>
-            <p style={{ fontSize: '0.95rem', color: '#f1f5f9', marginTop: '3rem', marginBottom: '5px' }}>
-              <strong style={{ color: '#bf953f' }}>Technologies:</strong> {currentProject.technologies}
+            <h3 className="showcase-title">{currentProject.title}</h3>
+            <p className="showcase-description">{currentProject.description}</p>
+            <p className="showcase-tech">
+              <strong className="showcase-tech-label">Technologies:</strong> {currentProject.technologies}
             </p>
           </div>
           
