@@ -31,5 +31,12 @@ export const create = async (content: string, isPublic: boolean, guestName: stri
   return response.data
 }
 
-const commentService = { getAll, create }
+export const remove = async (id: number, token: string): Promise<void> => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  await axios.delete(`${baseUrl}/${id}`, config)
+}
+
+const commentService = { getAll, create, remove }
 export default commentService

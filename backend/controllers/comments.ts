@@ -5,6 +5,7 @@ import Comment from '../models/comment'
 import User from '../models/user'
 import * as config from '../utils/config'
 import { CustomRequest } from '../middleware/tokenExtractor'
+import { adminAuthorization } from '../middleware/adminAuthorization'
 
 const commentsRouter = express.Router()
 
@@ -86,6 +87,22 @@ commentsRouter.post('/', async (request: CustomRequest, response: express.Respon
     })
 
     return response.status(201).json(completeComment)
+  } catch (error) {
+    return next(error)
+  }
+})
+
+commentsRouter.delete('/:id', adminAuthorization, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  try {
+    const commentId = Number(request.params.id)
+    const comment = await Comment.findByPk(commentId)
+    
+    if (comment) {
+      await comment.destroy()
+      return response.status(204).end()
+    } else {
+      return response.status(404).end()
+    }
   } catch (error) {
     return next(error)
   }

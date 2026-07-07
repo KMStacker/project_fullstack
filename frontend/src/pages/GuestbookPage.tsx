@@ -48,6 +48,19 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
     }
   }
 
+  const handleDeleteComment = async (id: number): Promise<void> => {
+    if (!user || user.role !== 'ADMIN') return
+    
+    if (window.confirm('Are you sure you want to delete this comment?')) {
+      try {
+        await commentService.remove(id, user.token)
+        setComments(comments.filter(comment => comment.id !== id))
+      } catch (err: any) {
+        setError(err.response?.data?.error || 'Failed to delete comment')
+      }
+    }
+  }
+
   return (
     <div className="content-window">
       <div className="info-box">
@@ -167,6 +180,15 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
             <strong>{comment.user ? comment.user.username : `${comment.guestName}`}</strong>
             {!comment.isPublic && <span style={{ fontStyle: 'italic', fontSize: '0.8rem', marginLeft: '5px' }}>[Private]</span>}
             : {comment.content}
+            {user?.role === 'ADMIN' && (
+              <button 
+                className="button" 
+                onClick={() => void handleDeleteComment(comment.id)} 
+                style={{ padding: '2px 8px', fontSize: '0.8rem', marginLeft: '10px' }}
+              >
+                Delete
+              </button>
+            )}
           </li>
         ))}
       </ul>
