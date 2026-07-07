@@ -7,6 +7,7 @@ export class Project extends Model {
   declare description: string
   declare technologies: string
   declare githubUrl: string
+  declare displayOrder: number
 }
 
 Project.init({
@@ -30,6 +31,11 @@ Project.init({
   githubUrl: {
     type: DataTypes.TEXT,
     defaultValue: ''
+  },
+  displayOrder: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   sequelize,

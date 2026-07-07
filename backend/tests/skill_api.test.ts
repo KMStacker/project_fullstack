@@ -108,6 +108,33 @@ describe('skills api validation', () => {
       .send(newSkill)
       .expect(401)
   })
+
+  test('skill creation fails without token', async () => {
+    const newSkill = {
+      name: 'Zero Token Skill',
+      level: 'Quite good',
+      usedOn: 'idk where'
+    }
+
+    await api
+      .post('/api/skills')
+      .send(newSkill)
+      .expect(401)
+  })
+
+  test('admin can reorder skills', async () => {
+    const s1 = await Skill.create({ name: 'S1', level: '1', usedOn: '', displayOrder: 0 })
+    const s2 = await Skill.create({ name: 'S2', level: '2', usedOn: '', displayOrder: 1 })
+
+    const response = await api
+      .put('/api/skills/reorder')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ orderedIds: [s2.id, s1.id] })
+      .expect(200)
+
+    expect(response.body[0].name).toBe('S2')
+    expect(response.body[1].name).toBe('S1')
+  })
 })
 
 afterAll(async () => {

@@ -176,6 +176,44 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     }
   }
 
+  const handleReorderProjects = async (index: number, direction: 'UP' | 'DOWN'): Promise<void> => {
+    const newProjects = [...projects]
+    if (direction === 'UP' && index > 0) {
+      [newProjects[index], newProjects[index - 1]] = [newProjects[index - 1], newProjects[index]]
+    } else if (direction === 'DOWN' && index < newProjects.length - 1) {
+      [newProjects[index], newProjects[index + 1]] = [newProjects[index + 1], newProjects[index]]
+    } else {
+      return
+    }
+    
+    setProjects(newProjects)
+    try {
+      const config = { headers: { Authorization: `Bearer ${user?.token}` } }
+      await axios.put('/api/projects/reorder', { orderedIds: newProjects.map(p => p.id) }, config)
+    } catch (error) {
+      console.error('Error reordering projects:', error)
+    }
+  }
+
+  const handleReorderSkills = async (index: number, direction: 'UP' | 'DOWN'): Promise<void> => {
+    const newSkills = [...skills]
+    if (direction === 'UP' && index > 0) {
+      [newSkills[index], newSkills[index - 1]] = [newSkills[index - 1], newSkills[index]]
+    } else if (direction === 'DOWN' && index < newSkills.length - 1) {
+      [newSkills[index], newSkills[index + 1]] = [newSkills[index + 1], newSkills[index]]
+    } else {
+      return
+    }
+    
+    setSkills(newSkills)
+    try {
+      const config = { headers: { Authorization: `Bearer ${user?.token}` } }
+      await axios.put('/api/skills/reorder', { orderedIds: newSkills.map(s => s.id) }, config)
+    } catch (error) {
+      console.error('Error reordering skills:', error)
+    }
+  }
+
   return (
     <>
     <div className="content-window">
@@ -207,12 +245,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
         )}
 
         <h4 style={{ marginBottom: '5px'}}>Projects:</h4>
-        {projects.map(project => (
+        {projects.map((project, index) => (
           <li key={project.id}>
             {project.title} &nbsp;
+            <button className="button" onClick={() => void handleReorderProjects(index, 'UP')} disabled={index === 0}>↑</button>
+            <button className="button" onClick={() => void handleReorderProjects(index, 'DOWN')} disabled={index === projects.length - 1}>↓</button>
             <button className="button" onClick={() => toggleInfo(project.id, visibleProjects, setVisibleProjects)}>{visibleProjects.includes(project.id) ? 'Hide info' : 'Show info'}</button>
             <button className="button" onClick={() => { setEditingProject(editingProject && editingProject.id === project.id ? null : project) }}>{editingProject && editingProject.id === project.id ? 'Stop editing' : 'Edit'}</button>
-            <button className="button" onClick={() => handleDeleteProject(project.id)}>Delete</button>
+            <button className="button" onClick={() => void handleDeleteProject(project.id)}>Delete</button>
             
             {visibleProjects.includes(project.id) && (
               <ul>

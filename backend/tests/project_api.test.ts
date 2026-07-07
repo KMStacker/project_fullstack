@@ -98,6 +98,20 @@ describe('projects api', () => {
     const projects = await Project.findAll()
     expect(projects).toHaveLength(0)
   })
+
+  test('admin can reorder projects', async () => {
+    const p1 = await Project.create({ title: 'P1', description: '', technologies: '', githubUrl: '', displayOrder: 0 })
+    const p2 = await Project.create({ title: 'P2', description: '', technologies: '', githubUrl: '', displayOrder: 1 })
+
+    const response = await api
+      .put('/api/projects/reorder')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ orderedIds: [p2.id, p1.id] })
+      .expect(200)
+
+    expect(response.body[0].title).toBe('P2')
+    expect(response.body[1].title).toBe('P1')
+  })
 })
 
 afterAll(async () => {

@@ -23,6 +23,11 @@ module.exports = {
       github_url: {
         type: DataTypes.TEXT,
         defaultValue: ''
+      },
+      display_order: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       }
     })
   },

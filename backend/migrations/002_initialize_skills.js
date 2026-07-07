@@ -19,6 +19,11 @@ module.exports = {
       used_on: {
         type: DataTypes.TEXT,
         defaultValue: ''
+      },
+      display_order: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       }
     })
   },

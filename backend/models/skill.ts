@@ -6,6 +6,7 @@ export class Skill extends Model {
   declare name: string
   declare level: string
   declare usedOn: string
+  declare displayOrder: number
 }
 
 Skill.init({
@@ -25,6 +26,11 @@ Skill.init({
   usedOn: {
     type: DataTypes.TEXT,
     defaultValue: ''
+  },
+  displayOrder: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   sequelize,

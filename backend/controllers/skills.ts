@@ -7,8 +7,27 @@ const skillsRouter = express.Router()
 
 // get all skills
 skillsRouter.get('/', async (_request: express.Request, response: express.Response) => {
-  const skills = await Skill.findAll()
+  const skills = await Skill.findAll({
+    order: [['displayOrder', 'ASC'], ['id', 'ASC']]
+  })
   response.json(skills)
+})
+
+// reorder skills
+skillsRouter.put('/reorder', adminAuthorization, async (request: express.Request, response: express.Response) => {
+  const { orderedIds } = request.body
+  if (!Array.isArray(orderedIds)) {
+    return response.status(400).json({ error: 'orderedIds must be an array' })
+  }
+
+  for (let i = 0; i < orderedIds.length; i++) {
+    await Skill.update({ displayOrder: i }, { where: { id: orderedIds[i] } })
+  }
+  
+  const skills = await Skill.findAll({
+    order: [['displayOrder', 'ASC'], ['id', 'ASC']]
+  })
+  return response.json(skills)
 })
 
 // create new skill

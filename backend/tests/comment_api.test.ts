@@ -10,6 +10,7 @@ import * as config from '../utils/config'
 const api = supertest(app)
 
 let userToken: string
+let adminToken: string
 let testUser: any
 
 beforeAll(async () => {
@@ -26,8 +27,19 @@ beforeEach(async () => {
     role: 'USER'
   })
 
+  const adminUser = await User.create({
+    username: 'admin',
+    passwordHash: '12345',
+    role: 'ADMIN'
+  })
+
   userToken = jwt.sign(
     { username: testUser.username, id: testUser.id, role: testUser.role },
+    config.SECRET || ''
+  )
+
+  adminToken = jwt.sign(
+    { username: adminUser.username, id: adminUser.id, role: adminUser.role },
     config.SECRET || ''
   )
 })
@@ -94,6 +106,21 @@ describe('comments api', () => {
       .set('Authorization', `Bearer ${userToken}`)
       .send(newComment)
       .expect(400)
+  })
+
+  test('admin can delete a comment', async () => {
+    const comment = await Comment.create({
+      content: 'To be deleted',
+      userId: testUser.id
+    })
+
+    await api
+      .delete(`/api/comments/${comment.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(204)
+    
+    const commentsAtEnd = await Comment.findAll()
+    expect(commentsAtEnd).toHaveLength(0)
   })
 })
 
