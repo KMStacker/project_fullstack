@@ -64,17 +64,27 @@ commentsRouter.post('/', async (request: CustomRequest, response: express.Respon
       }
     }
 
-    const { content, isPublic, guestName } = request.body
+    const { content, isPublic, guestName, parentId } = request.body
 
     if (!content || typeof content !== 'string' || content.trim() === '') {
       return response.status(400).json({ error: 'content is required' })
     }
 
-   const savedComment = await Comment.create({
+    let validParentId = null
+    if (parentId) {
+      const parentComment = await Comment.findByPk(parentId)
+      if (!parentComment) {
+        return response.status(400).json({ error: 'parent comment not found' })
+      }
+      validParentId = parentComment.id
+    }
+
+    const savedComment = await Comment.create({
       content: content.trim(),
       userId: userId,
       isPublic: isPublic !== undefined ? isPublic : true,
-      guestName: ''
+      guestName: '',
+      parentId: validParentId
     })
 
     if (!userId) {

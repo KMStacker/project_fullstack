@@ -9,6 +9,7 @@ export class Comment extends Model {
   declare isPublic: boolean
   declare guestName: string | null
   declare createdAt: Date
+  declare parentId: number | null
 }
 
 Comment.init({
@@ -34,6 +35,11 @@ Comment.init({
   guestName: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  parentId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: { model: 'comments', key: 'id' }
   },
   createdAt: {
     type: DataTypes.DATE,

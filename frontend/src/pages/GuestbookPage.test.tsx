@@ -19,7 +19,8 @@ const mockComments = [
     createdAt: '2025-01-01T12:00:00.000Z',
     user: { username: 'testuser1', role: 'USER' },
     isPublic: true,
-    guestName: null
+    guestName: null,
+    parentId: null
   }
 ]
 
@@ -52,7 +53,8 @@ describe('GuestbookPage', () => {
       createdAt: '2025-01-02T12:00:00.000Z',
       user: { username: 'testuser2', role: 'USER' },
       isPublic: true,
-      guestName: null
+      guestName: null,
+      parentId: null
     })
 
     render(<GuestbookPage user={mockUser} handleLogin={vi.fn()} />)
@@ -62,7 +64,7 @@ describe('GuestbookPage', () => {
     await userEvent.type(input, 'Super to be here!')
     await userEvent.click(postButton)
 
-    expect(commentService.create).toHaveBeenCalledWith('Super to be here!', true, '', 'user-token')
+    expect(commentService.create).toHaveBeenCalledWith('Super to be here!', true, '', 'user-token', null)
     expect(await screen.findByText(/Super to be here!/)).toBeInTheDocument()
   })
 })
