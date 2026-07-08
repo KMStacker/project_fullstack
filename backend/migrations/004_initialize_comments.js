@@ -27,6 +27,12 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true
       },
+      parent_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: { model: 'comments', key: 'id' },
+        onDelete: 'CASCADE'
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
