@@ -12,6 +12,7 @@ export interface Comment {
   } | null
   isPublic: boolean
   guestName: string | null
+  parentId: number | null
 }
 
 export const getAll = async (token: string | null = null): Promise<Comment[]> => {
@@ -22,12 +23,12 @@ export const getAll = async (token: string | null = null): Promise<Comment[]> =>
   return response.data
 }
 
-export const create = async (content: string, isPublic: boolean, guestName: string, token: string | null): Promise<Comment> => {
+export const create = async (content: string, isPublic: boolean, guestName: string, token: string | null, parentId: number | null = null): Promise<Comment> => {
   const config = token ? {
     headers: { Authorization: `Bearer ${token}` }
   } : {}
 
-  const response = await axios.post<Comment>(baseUrl, { content, isPublic, guestName }, config)
+  const response = await axios.post<Comment>(baseUrl, { content, isPublic, guestName, parentId }, config)
   return response.data
 }
 

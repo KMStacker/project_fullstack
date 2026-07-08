@@ -21,6 +21,7 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
   const [guestName, setGuestName] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'NONE' | 'LOGIN' | 'REGISTER' | 'GUEST'>('NONE')
+  const [replyingTo, setReplyingTo] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -37,12 +38,13 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
   const handlePostComment = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
     try {
-      const savedComment = await commentService.create(newComment, isPublic, guestName, user ? user.token : null)
+      const savedComment = await commentService.create(newComment, isPublic, guestName, user ? user.token : null, replyingTo)
       setComments([savedComment, ...comments])
       setNewComment('')
       setGuestName('')
       setError(null)
       setViewMode('NONE')
+      setReplyingTo(null)
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to post comment')
     }
@@ -61,6 +63,43 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
     }
   }
 
+  const renderCommentThread = (parentId: number | null = null, depth: number = 0): JSX.Element | null => {
+    const threadComments = comments.filter(c => c.parentId === parentId)
+    if (threadComments.length === 0) return null
+
+    return (
+      <ul style={{ paddingLeft: depth === 0 ? '20px' : '40px', marginTop: depth === 0 ? '0' : '10px' }}>
+        {threadComments.map(comment => (
+          <li key={comment.id} style={{ marginBottom: '10px' }}>
+            <strong>{comment.user ? comment.user.username : `${comment.guestName}`}</strong>
+            {!comment.isPublic && <span style={{ fontStyle: 'italic', fontSize: '0.8rem', marginLeft: '5px' }}>[Private]</span>}
+            : {comment.content}
+            <button
+              className="button"
+              onClick={() => {
+                setReplyingTo(comment.id)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              style={{ padding: '2px 8px', fontSize: '0.8rem', marginLeft: '10px' }}
+            >
+              Reply
+            </button>
+            {user?.role === 'ADMIN' && (
+              <button
+                className="button"
+                onClick={() => void handleDeleteComment(comment.id)}
+                style={{ padding: '2px 8px', fontSize: '0.8rem', marginLeft: '10px' }}
+              >
+                Delete
+              </button>
+            )}
+            {renderCommentThread(comment.id, depth + 1)}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
   return (
     <div className="content-window">
       <div className="info-box">
@@ -71,6 +110,15 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
         </p>
         <br/>
       </div>
+
+      {replyingTo && (
+        <div className="info-box" style={{ marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ color: 'var(--text-highlight)' }}>
+            Replying to a comment...
+          </span>
+          <button className="button" style={{ margin: 0, padding: '4px 10px' }} onClick={() => setReplyingTo(null)}>Cancel Reply</button>
+        </div>
+      )}
 
       {user ? (
         <form onSubmit={handlePostComment}>
@@ -174,24 +222,7 @@ const GuestbookPage = ({ user, handleLogin }: GuestbookPageProps): JSX.Element =
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <h3>Comments:</h3>
-      <ul style={{ paddingLeft: '20px' }}>
-        {comments.map(comment => (
-          <li key={comment.id} style={{ marginBottom: '10px' }}>
-            <strong>{comment.user ? comment.user.username : `${comment.guestName}`}</strong>
-            {!comment.isPublic && <span style={{ fontStyle: 'italic', fontSize: '0.8rem', marginLeft: '5px' }}>[Private]</span>}
-            : {comment.content}
-            {user?.role === 'ADMIN' && (
-              <button 
-                className="button" 
-                onClick={() => void handleDeleteComment(comment.id)} 
-                style={{ padding: '2px 8px', fontSize: '0.8rem', marginLeft: '10px' }}
-              >
-                Delete
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+      {renderCommentThread(null, 0)}
     </div>
   )
 }
