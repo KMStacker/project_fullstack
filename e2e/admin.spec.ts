@@ -19,7 +19,17 @@ test.describe('Admin Dashboard Flow', () => {
   })
 
   test.afterAll(async () => {
-    await sharedPage.close()
+    try {
+      await sharedPage.goto('/admin')
+      const projectItem = sharedPage.locator('li').filter({ hasText: title })
+      if (await projectItem.isVisible()) {
+        await projectItem.getByRole('button', { name: 'Delete' }).click()
+      }
+    } catch (error) {
+      console.error('Cleanup error in E2E spec:', error)
+    } finally {
+      await sharedPage.close()
+    }
   })
 
   test('should log in successfully as admin', async () => {

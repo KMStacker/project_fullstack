@@ -55,7 +55,7 @@ const RegisterForm = ({ handleLogin, onSuccess, onCancel }: RegisterFormProps): 
       <h2>Register New Account</h2>
       {showModal && (
         <div className="info-box">
-          <p>Registration successful! Do you want to log in also?</p>
+          <p>Registration successful! Would you like to log in now?</p>
           <button type="button" className="button" onClick={() => void handleModalChoice(true)}>Yes</button>
           <button type="button" className="button" onClick={() => void handleModalChoice(false)}>No</button>
         </div>
