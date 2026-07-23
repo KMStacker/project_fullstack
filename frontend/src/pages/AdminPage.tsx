@@ -363,8 +363,8 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
               <form onSubmit={handleEditSkill}>
                 <div className="form-grid">
                   Name: <input type="text" name="name" value={editingSkill.name} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
-                  Level: <input type="text" name="description" value={editingSkill.level} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
-                  UsedOn: <input type="text" name="technologies" value={editingSkill.usedOn} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
+                  Level: <input type="text" name="level" value={editingSkill.level} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
+                  UsedOn: <input type="text" name="usedOn" value={editingSkill.usedOn} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
                   <button style={{ marginTop: '10px'}} type="submit">Save editions</button>
                 </div>
               </form>

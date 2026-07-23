@@ -1,7 +1,6 @@
 import { Sequelize } from 'sequelize'
 import { Umzug, SequelizeStorage } from 'umzug'
 import * as config from './config'
-// import path from 'path'
 
 
 const isProduction = process.env.NODE_ENV === 'production'

@@ -47,44 +47,50 @@ const SkillsPage = (): JSX.Element => {
     <div className="content-window showcase-container">
       <h1 className="showcase-header">Skills Showcase</h1>
       
-      <div className="showcase-nav-wrapper">
-        <button className="button" onClick={handlePrevious} style={{ padding: '12px 16px', fontSize: '1.2rem' }}>
-          &larr;
-        </button>
-        
-        <div key={currentSkill.id} className="animated-slide-card showcase-card" style={{ justifyContent: 'center', boxSizing: 'border-box' }}>
-          <h3 className="showcase-title">{currentSkill.name}</h3>
-          <p style={{ fontSize: '1rem', color: '#f1f5f9', lineHeight: '1.6', marginTop: '1rem', marginBottom: 0 }}>
-            <strong className="showcase-tech-label">Level:</strong> {currentSkill.level}
-          </p>
-          <p style={{ fontSize: '1rem', color: '#f1f5f9', lineHeight: '1.6', marginTop: 1, marginBottom: '1rem' }}>
-            <strong className="showcase-tech-label">Used on:</strong> {currentSkill.usedOn}
-          </p>
+      <div className="showcase-layout">
+        <div className="showcase-sidebar">
+          {skills.map((skill, index) => (
+            <button
+              key={skill.id}
+              className={`showcase-sidebar-item ${currentIndex === index ? 'active' : ''}`}
+              onClick={() => setCurrentIndex(index)}
+            >
+              {skill.name}
+            </button>
+          ))}
         </div>
-        
-        <button className="button" onClick={handleNext} style={{ padding: '12px 16px', fontSize: '1.2rem' }}>
-          &rarr;
-        </button>
-      </div>
-      
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '30px' }}>
-        {skills.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            style={{
-              width: '12px',
-              height: '12px',
-              borderRadius: '50%',
-              border: 'none',
-              backgroundColor: currentIndex === index ? '#fcf6ba' : 'rgba(255, 255, 255, 0.25)',
-              transition: 'background-color 0.3s ease, transform 0.3s ease',
-              transform: currentIndex === index ? 'scale(1.2)' : 'scale(1)',
-              cursor: 'pointer',
-              padding: 0
-            }}
-          />
-        ))}
+
+        <div className="showcase-main">
+          <div className="showcase-nav-wrapper">
+            <button className="button" onClick={handlePrevious} style={{ padding: '12px 16px', fontSize: '1.2rem' }}>
+              &larr;
+            </button>
+            
+            <div key={currentSkill.id} className="animated-slide-card showcase-card" style={{ justifyContent: 'center', boxSizing: 'border-box' }}>
+              <h3 className="showcase-title">{currentSkill.name}</h3>
+              <p style={{ fontSize: '1rem', color: '#f1f5f9', lineHeight: '1.6', marginTop: '1rem', marginBottom: 0 }}>
+                <strong className="showcase-tech-label">Level:</strong> {currentSkill.level}
+              </p>
+              <p style={{ fontSize: '1rem', color: '#f1f5f9', lineHeight: '1.6', marginTop: '0.25rem', marginBottom: '1rem' }}>
+                <strong className="showcase-tech-label">Used on:</strong> {currentSkill.usedOn}
+              </p>
+            </div>
+            
+            <button className="button" onClick={handleNext} style={{ padding: '12px 16px', fontSize: '1.2rem' }}>
+              &rarr;
+            </button>
+          </div>
+          
+          <div className="showcase-nav-lists">
+            {skills.map((_, index) => (
+              <button
+                key={index}
+                className={`showcase-nav-list ${currentIndex === index ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
