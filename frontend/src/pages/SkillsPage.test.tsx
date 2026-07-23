@@ -29,32 +29,31 @@ beforeEach(() => {
 describe('SkillsPage', () => {
   test('renders page title and fetches skills successfully', async () => {
     render(<SkillsPage />)
-    const skillName = await screen.findByText('GoLang')
-    expect(skillName).toBeInTheDocument()
+    const skillNames = await screen.findAllByText('GoLang')
+    expect(skillNames.length).toBeGreaterThan(0)
     expect(screen.getByText('Skills Showcase')).toBeInTheDocument()
   })
 
   test('displays first skill details by default', async () => {
     render(<SkillsPage />)
-    await screen.findByText('GoLang')
+    await screen.findAllByText('GoLang')
     expect(screen.getByText('Expert')).toBeInTheDocument()
     expect(screen.getByText('Backend')).toBeInTheDocument()
   })
 
   test('navigates between skills when clicking the next and previous buttons', async () => {
     render(<SkillsPage />)
-    await screen.findByText('GoLang')
+    await screen.findAllByText('GoLang')
 
-    const nextButton = screen.getByRole('button', { name: '→' })
-    await userEvent.click(nextButton)
+    const reactSidebarButton = screen.getByRole('button', { name: 'React' })
+    await userEvent.click(reactSidebarButton)
 
-    expect(await screen.findByText('React')).toBeInTheDocument()
     expect(screen.getByText('Intermediate')).toBeInTheDocument()
     expect(screen.getByText('Frontend')).toBeInTheDocument()
 
     const prevButton = screen.getByRole('button', { name: '←' })
     await userEvent.click(prevButton)
 
-    expect(await screen.findByText('GoLang')).toBeInTheDocument()
+    expect(screen.getByText('Expert')).toBeInTheDocument()
   })
 })

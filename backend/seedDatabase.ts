@@ -61,7 +61,7 @@ const seedDatabase = async (): Promise<void> => {
         },
         {
           name: 'Python',
-          level: 'Intermediate',
+          level: 'Advanced',
           usedOn: 'Frontend & Backend'
         }
 

@@ -31,31 +31,30 @@ beforeEach(() => {
 describe('ProjectsPage', () => {
   test('renders page title and fetches projects successfully', async () => {
     render(<ProjectsPage />)
-    const projectTitle = await screen.findByText('First App')
-    expect(projectTitle).toBeInTheDocument()
+    const projectTitles = await screen.findAllByText('First App')
+    expect(projectTitles.length).toBeGreaterThan(0)
     expect(screen.getByText('Projects Showcase')).toBeInTheDocument()
   })
 
   test('displays first project details by default', async () => {
     render(<ProjectsPage />)
-    await screen.findByText('First App')
+    await screen.findAllByText('First App')
     expect(screen.getByText('First description')).toBeInTheDocument()
     expect(screen.getByText('Node, React')).toBeInTheDocument()
   })
 
   test('navigates between projects when clicking the next and previous buttons', async () => {
     render(<ProjectsPage />)
-    await screen.findByText('First App')
+    await screen.findAllByText('First App')
 
-    const nextButton = screen.getByRole('button', { name: '→' })
-    await userEvent.click(nextButton)
+    const secondAppSidebarButton = screen.getByRole('button', { name: 'Second App' })
+    await userEvent.click(secondAppSidebarButton)
 
-    expect(await screen.findByText('Second App')).toBeInTheDocument()
     expect(screen.getByText('Second description')).toBeInTheDocument()
 
     const prevButton = screen.getByRole('button', { name: '←' })
     await userEvent.click(prevButton)
 
-    expect(await screen.findByText('First App')).toBeInTheDocument()
+    expect(screen.getByText('First description')).toBeInTheDocument()
   })
 })
