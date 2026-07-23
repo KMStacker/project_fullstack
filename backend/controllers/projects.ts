@@ -32,13 +32,16 @@ projectsRouter.put('/reorder', adminAuthorization, async (request: express.Reque
 // create new project
 projectsRouter.post('/', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const body = request.body
+  if (!body.title || typeof body.title !== 'string' || body.title.trim() === '') {
+    return response.status(400).json({ error: 'title is required' })
+  }
   const savedProject = await Project.create({
     title: body.title,
     description: body.description || '',
     technologies: body.technologies || '',
     githubUrl: body.githubUrl || '',
   })
-  response.status(201).json(savedProject)
+  return response.status(201).json(savedProject)
 })
 
 // update project

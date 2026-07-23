@@ -3,6 +3,7 @@ dotenv.config()
 import { connectDb, sequelize } from './utils/db'
 import Project from './models/project'
 import Skill from './models/skill'
+import Profile from './models/profile'
 import * as logger from './utils/logger'
 
 const seedDatabase = async (): Promise<void> => {
@@ -11,6 +12,24 @@ const seedDatabase = async (): Promise<void> => {
     await connectDb()
     logger.info('Connected to db!')
 
+    logger.info('Checking for existing profile...')
+    const profileCount = await Profile.count()
+    if (profileCount === 0) {
+      logger.info('Seeding initial profile...')
+
+      await Profile.create({
+        name: 'Kyösti Männistö',
+        email: 'kmannisto@hotmail.com',
+        phone: '+358 50 5179151',
+        aboutText: 'Software developer with a Master of Laws degree',
+        location: 'Espoo, Finland',
+        githubUrl: 'https://github.com/KMStacker',
+        status: 'Open for Software Engineering Opportunities'
+      })
+      logger.info('Profile seeded successfully.')
+    } else {
+      logger.info('Profile already exists. Skipping seed.')
+    }
     logger.info('Checking for existing projects...')
     const projectCount = await Project.count()
     if (projectCount === 0) {

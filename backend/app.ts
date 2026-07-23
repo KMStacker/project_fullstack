@@ -9,6 +9,7 @@ import usersRouter from './controllers/users'
 import loginRouter from './controllers/login'
 import requestLogger from './middleware/requestLogger'
 import commentsRouter from './controllers/comments'
+import profileRouter from './controllers/profiles'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/api/skills', skillsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/comments', commentsRouter)
+app.use('/api/profile', profileRouter)
 
 app.use(express.static(path.join(__dirname, '../../frontend/dist')))
 

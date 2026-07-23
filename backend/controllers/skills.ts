@@ -33,12 +33,15 @@ skillsRouter.put('/reorder', adminAuthorization, async (request: express.Request
 // create new skill
 skillsRouter.post('/', adminAuthorization, async (request: express.Request, response: express.Response) => {
   const body = request.body
+  if (!body.name || typeof body.name !== 'string' || body.name.trim() === '') {
+    return response.status(400).json({ error: 'name is required' })
+  }
   const savedSkill = await Skill.create({
     name: body.name,
     level: body.level,
     usedOn: body.usedOn || '',
   })
-  response.status(201).json(savedSkill)
+  return response.status(201).json(savedSkill)
 })
 
 // update skill

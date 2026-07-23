@@ -1,6 +1,16 @@
 import { useState, useEffect, JSX } from 'react'
 import axios from 'axios'
 
+export interface ProfileData {
+  name: string
+  email: string
+  phone: string
+  aboutText: string
+  location: string
+  githubUrl: string
+  status: string
+}
+
 export interface Project {
   id: number
   title: string
@@ -49,6 +59,8 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [visibleProjects, setVisibleProjects] = useState<number[]>([])
   const [addingProject, setAddingProject] = useState<boolean>(false)
+  const [projectError, setProjectError] = useState<string | null>(null)
+  const [projectSuccess, setProjectSuccess] = useState<string | null>(null)
 
   const [skills, setSkills] = useState<Skill[]>([])
   const [newSkill, setNewSkill] = useState({
@@ -59,6 +71,21 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
   const [visibleSkills, setVisibleSkills] = useState<number[]>([])
   const [addingSkill, setAddingSkill] = useState<boolean>(false)
+  const [skillError, setSkillError] = useState<string | null>(null)
+  const [skillSuccess, setSkillSuccess] = useState<string | null>(null)
+
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: '',
+    email: '',
+    phone: '',
+    aboutText: '',
+    location: '',
+    githubUrl: '',
+    status: ''
+  })
+  const [editingProfile, setEditingProfile] = useState<boolean>(false)
+  const [profileError, setProfileError] = useState<string | null>(null)
+  const [profileSuccess, setProfileSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     axios
@@ -71,6 +98,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
       .then(response => {
         setProjects(response.data)
       })
+    axios
+      .get<ProfileData>('/api/profile')
+      .then(response => {
+        if (response.data) {
+          setProfileData(response.data)
+        }
+      })
+      .catch(err => console.error('Error fetching profile:', err))
   }, [])
 
   useEffect(() => {
@@ -104,7 +139,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
   
   const handleAddProject = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
+    if (!newProject.title.trim()) {
+      setProjectError('Project title is required')
+      return
+    }
+
     try {
+      setProjectError(null)
+      setProjectSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
@@ -117,20 +159,26 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
         githubUrl: ''
       })
       setAddingProject(false)
-    } catch (error) {
+      setProjectSuccess('Project created successfully!')
+    } catch (error: any) {
       console.error('Error creating project:', error)
+      setProjectError(error.response?.data?.error || 'Failed to create project.')
     }
   }
 
   const handleDeleteProject = async (id: number): Promise<void> => {
     try {
+      setProjectError(null)
+      setProjectSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
       await axios.delete(`/api/projects/${id}`, config)
       setProjects(projects.filter(project => project.id !== id))
-    } catch (error) {
+      setProjectSuccess('Project deleted successfully!')
+    } catch (error: any) {
       console.error('Error deleting project:', error)
+      setProjectError(error.response?.data?.error || 'Failed to delete project.')
     }
   }
 
@@ -138,20 +186,31 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     event.preventDefault()
     if (!editingProject) return
     try {
+      setProjectError(null)
+      setProjectSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
       const response = await axios.put(`/api/projects/${editingProject.id}`, editingProject, config)
       setProjects(projects.map(project => project.id === editingProject.id ? response.data : project))
       setEditingProject(null)
-    } catch (error) {
+      setProjectSuccess('Project updated successfully!')
+    } catch (error: any) {
       console.error('Error editing project:', error)
+      setProjectError(error.response?.data?.error || 'Failed to edit project.')
     }
   }
 
   const handleAddSkill = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault()
+    if (!newSkill.name.trim()) {
+      setSkillError('Skill name is required')
+      return
+    }
+
     try {
+      setSkillError(null)
+      setSkillSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
@@ -163,20 +222,26 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
         usedOn: ''
       })
       setAddingSkill(false)
-    } catch (error) {
+      setSkillSuccess('Skill created successfully!')
+    } catch (error: any) {
       console.error('Error creating skill:', error)
+      setSkillError(error.response?.data?.error || 'Failed to create skill.')
     }
   }
 
   const handleDeleteSkill = async (id: number): Promise<void> => {
     try {
+      setSkillError(null)
+      setSkillSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
       await axios.delete(`/api/skills/${id}`, config)
       setSkills(skills.filter(skill => skill.id !== id))
-    } catch (error) {
+      setSkillSuccess('Skill deleted successfully!')
+    } catch (error: any) {
       console.error('Error deleting skill:', error)
+      setSkillError(error.response?.data?.error || 'Failed to delete skill.')
     }
   }
 
@@ -184,14 +249,18 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     event.preventDefault()
     if (!editingSkill) return
     try {
+      setSkillError(null)
+      setSkillSuccess(null)
       const config = {
         headers: { Authorization: `Bearer ${user?.token}` }
       }
       const response = await axios.put(`/api/skills/${editingSkill.id}`, editingSkill, config)
       setSkills(skills.map(skill => skill.id === editingSkill.id ? response.data : skill))
       setEditingSkill(null)
-    } catch (error) {
+      setSkillSuccess('Skill updated successfully!')
+    } catch (error: any) {
       console.error('Error editing skill:', error)
+      setSkillError(error.response?.data?.error || 'Failed to edit skill.')
     }
   }
 
@@ -207,10 +276,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     
     setProjects(newProjects)
     try {
+      setProjectError(null)
+      setProjectSuccess(null)
       const config = { headers: { Authorization: `Bearer ${user?.token}` } }
       await axios.put('/api/projects/reorder', { orderedIds: newProjects.map(p => p.id) }, config)
-    } catch (error) {
+      setProjectSuccess('Projects reordered successfully!')
+    } catch (error: any) {
       console.error('Error reordering projects:', error)
+      setProjectError(error.response?.data?.error || 'Failed to reorder projects.')
     }
   }
 
@@ -226,10 +299,14 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
     
     setSkills(newSkills)
     try {
+      setSkillError(null)
+      setSkillSuccess(null)
       const config = { headers: { Authorization: `Bearer ${user?.token}` } }
       await axios.put('/api/skills/reorder', { orderedIds: newSkills.map(s => s.id) }, config)
-    } catch (error) {
+      setSkillSuccess('Skills reordered successfully!')
+    } catch (error: any) {
       console.error('Error reordering skills:', error)
+      setSkillError(error.response?.data?.error || 'Failed to reorder skills.')
     }
   }
 
@@ -240,6 +317,22 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
       setAdminUsers(adminUsers.map(u => u.id === id ? response.data : u))
     } catch (error) {
       console.error('Error toggling comment status:', error)
+    }
+  }
+
+  const handleSaveProfile = async (event: React.SyntheticEvent): Promise<void> => {
+    event.preventDefault()
+    try {
+      setProfileError(null)
+      setProfileSuccess(null)
+      const config = { headers: { Authorization: `Bearer ${user?.token}` } }
+      const response = await axios.put<ProfileData>('/api/profile', profileData, config)
+      setProfileData(response.data)
+      setEditingProfile(false)
+      setProfileSuccess('Profile updated successfully!')
+    } catch (error: any) {
+      console.error('Error updating profile:', error)
+      setProfileError(error.response?.data?.error || 'Failed to update profile. Ensure database is seeded and admin token is valid.')
     }
   }
 
@@ -257,17 +350,19 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
           </button>
         </div>
         
+        {projectSuccess && <p style={{ color: 'green', marginTop: '10px' }}>{projectSuccess}</p>}
+        {projectError && <p style={{ color: 'red', marginTop: '10px' }}>{projectError}</p>}
 
         {addingProject && (
           <div>
             <h4>Here you can add a new project:</h4>
             <form onSubmit={handleAddProject}>
               <div className="form-grid">
-                Title: <input type="text" name="title" value={newProject.title} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
-                Description: <input type="text" name="description" value={newProject.description} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
-                Technologies: &nbsp; <input type="text" name="technologies" value={newProject.technologies} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
-                GitHub: <input type="text" name="githubUrl" value={newProject.githubUrl} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
-                <button style={{ marginTop: '10px'}} type="submit">Add project</button>
+                Title: <input className="theme-input" type="text" name="title" value={newProject.title} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
+                Description: <input className="theme-input" type="text" name="description" value={newProject.description} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
+                Technologies: &nbsp; <input className="theme-input" type="text" name="technologies" value={newProject.technologies} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
+                GitHub: <input className="theme-input" type="text" name="githubUrl" value={newProject.githubUrl} onChange={(event) => handleInputChange(event, setNewProject, newProject)} />
+                <button className="button" style={{ marginTop: '10px'}} type="submit">Add project</button>
               </div>
             </form>
           </div>
@@ -301,11 +396,11 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
                 <h4>Here you can edit the project you have chosen: "{editingProject.title}"</h4>
                 <form onSubmit={handleEditProject}>
                   <div className="form-grid">
-                    Title: <input type="text" name="title" value={editingProject.title} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
-                    Description: <input type="text" name="description" value={editingProject.description} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
-                    Technologies: <input type="text" name="technologies" value={editingProject.technologies} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
-                    GitHub: <input type="text" name="githubUrl" value={editingProject.githubUrl} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
-                    <button style={{ marginTop: '10px'}} type="submit">Save editions</button>
+                    Title: <input className="theme-input" type="text" name="title" value={editingProject.title} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
+                    Description: <input className="theme-input" type="text" name="description" value={editingProject.description} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
+                    Technologies: <input className="theme-input" type="text" name="technologies" value={editingProject.technologies} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
+                    GitHub: <input className="theme-input" type="text" name="githubUrl" value={editingProject.githubUrl} onChange={(event) => handleInputChange(event, setEditingProject, editingProject)} />
+                    <button className="button" style={{ marginTop: '10px'}} type="submit">Save editions</button>
                   </div>
                 </form>
               </div>
@@ -323,15 +418,19 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
           {addingSkill ? 'Stop adding new skill' : 'Add new skill'}
         </button>
       </div>
+
+      {skillSuccess && <p style={{ color: 'green', marginTop: '10px' }}>{skillSuccess}</p>}
+      {skillError && <p style={{ color: 'red', marginTop: '10px' }}>{skillError}</p>}
+
       {addingSkill && (
         <div>
           <h4>Here you can add a new skill:</h4>
           <form onSubmit={handleAddSkill}>
             <div className="form-grid">
-              Name: <input type="text" name="name" value={newSkill.name} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
-              Level: <input type="text" name="level" value={newSkill.level} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
-              UsedOn: <input type="text" name="usedOn" value={newSkill.usedOn} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
-              <button style={{ marginTop: '10px'}} type="submit">Add skill</button>
+              Name: <input className="theme-input" type="text" name="name" value={newSkill.name} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
+              Level: <input className="theme-input" type="text" name="level" value={newSkill.level} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
+              UsedOn: <input className="theme-input" type="text" name="usedOn" value={newSkill.usedOn} onChange={(event) => handleInputChange(event, setNewSkill, newSkill)} />
+              <button className="button" style={{ marginTop: '10px'}} type="submit">Add skill</button>
             </div>
           </form>
         </div>
@@ -362,10 +461,10 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
               <h4>Here you can edit the skill you have chosen: "{editingSkill.name}"</h4>
               <form onSubmit={handleEditSkill}>
                 <div className="form-grid">
-                  Name: <input type="text" name="name" value={editingSkill.name} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
-                  Level: <input type="text" name="level" value={editingSkill.level} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
-                  UsedOn: <input type="text" name="usedOn" value={editingSkill.usedOn} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
-                  <button style={{ marginTop: '10px'}} type="submit">Save editions</button>
+                  Name: <input className="theme-input" type="text" name="name" value={editingSkill.name} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
+                  Level: <input className="theme-input" type="text" name="level" value={editingSkill.level} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
+                  UsedOn: <input className="theme-input" type="text" name="usedOn" value={editingSkill.usedOn} onChange={(event) => handleInputChange(event, setEditingSkill, editingSkill)} />
+                  <button className="button" style={{ marginTop: '10px'}} type="submit">Save editions</button>
                 </div>
               </form>
             </div>
@@ -374,6 +473,83 @@ const AdminPage = ({ user }: AdminPageProps): JSX.Element => {
       ))}
     </div>
     
+    <hr></hr>
+
+    <div className="content-window">
+      <h4 style={{ marginBottom: '5px' }}>Profile & Contact Info Management:</h4>
+      <button className="button" onClick={() => setEditingProfile(!editingProfile)}>
+        {editingProfile ? 'Cancel Editing Profile' : 'Edit Profile Info'}
+      </button>
+
+      {profileSuccess && <p style={{ color: 'green', marginTop: '10px' }}>{profileSuccess}</p>}
+      {profileError && <p style={{ color: 'red', marginTop: '10px' }}>{profileError}</p>}
+
+      {editingProfile && (
+        <form onSubmit={handleSaveProfile} style={{ marginTop: '10px' }}>
+          <div className="form-grid">
+            About Text:
+            <textarea
+              rows={4}
+              name="aboutText"
+              className="theme-input"
+              style={{ width: '100%', resize: 'vertical' }}
+              value={profileData.aboutText}
+              onChange={(e) => setProfileData({ ...profileData, aboutText: e.target.value })}
+            />
+            Name:
+            <input
+              className="theme-input"
+              type="text"
+              name="name"
+              value={profileData.name}
+              onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+            />
+            Email:
+            <input
+              className="theme-input"
+              type="text"
+              name="email"
+              value={profileData.email}
+              onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+            />
+            Phone:
+            <input
+              className="theme-input"
+              type="text"
+              name="phone"
+              value={profileData.phone}
+              onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+            />
+            Location:
+            <input
+              className="theme-input"
+              type="text"
+              name="location"
+              value={profileData.location}
+              onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+            />
+            GitHub URL:
+            <input
+              className="theme-input"
+              type="text"
+              name="githubUrl"
+              value={profileData.githubUrl}
+              onChange={(e) => setProfileData({ ...profileData, githubUrl: e.target.value })}
+            />
+            Status:
+            <input
+              className="theme-input"
+              type="text"
+              name="status"
+              value={profileData.status}
+              onChange={(e) => setProfileData({ ...profileData, status: e.target.value })}
+            />
+            <button className="button" style={{ marginTop: '10px' }} type="submit">Save Profile Changes</button>
+          </div>
+        </form>
+      )}
+    </div>
+
     <hr></hr>
     
     <div className="content-window">

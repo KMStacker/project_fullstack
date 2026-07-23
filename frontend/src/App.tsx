@@ -11,7 +11,7 @@ import loginService from './services/login'
 import RegisterForm from './components/RegisterForm'
 import SparkleOverlay from './components/SparkleOverlay'
 
-export type AppTheme = 'default' | 'golden' | 'rainbow'
+export type AppTheme = 'nightsky' | 'golden' | 'rainbow'
 
 interface User {
   username: string
@@ -23,7 +23,7 @@ const App = (): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
   const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false)
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
-  const [theme, setTheme] = useState<AppTheme>('default')
+  const [theme, setTheme] = useState<AppTheme>('nightsky')
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -40,7 +40,7 @@ const App = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    document.body.className = theme === 'default' ? '' : `theme-${theme}`
+    document.body.className = theme === 'nightsky' ? '' : `theme-${theme}`
     window.localStorage.setItem('appTheme', theme)
   }, [theme])
 
